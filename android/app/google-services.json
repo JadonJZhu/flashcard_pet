@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "696031430080",
+    "project_id": "flashcard-cat-app",
+    "storage_bucket": "flashcard-cat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696031430080:android:28ee7b3466127a7a347425",
+        "android_client_info": {
+          "package_name": "com.example.flashcard_pet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7_F6wCdi7v_cK3Z1s6Ap1hQs2OvBUwz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
