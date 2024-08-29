@@ -7,7 +7,7 @@ part of 'decks_list_screen_controller.dart';
 // **************************************************************************
 
 String _$decksListScreenControllerHash() =>
-    r'a20bb41a9d69cc0751f80ab97cbd4b44ead8e6a1';
+    r'ce3938a2e09c78e8758113e1473b1fbbc5f78012';
 
 /// See also [DecksListScreenController].
 @ProviderFor(DecksListScreenController)

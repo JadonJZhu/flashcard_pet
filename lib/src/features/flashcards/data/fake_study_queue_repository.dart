@@ -10,51 +10,51 @@ class FakeStudyQueueRepository implements StudyQueueRepository {
 
   final bool addDelay;
 
-  final _studyQueues = InMemoryStore<Map<QueueType, List<FlashcardID>>>({
-    QueueType.reviewed: [],
-    QueueType.toStudy:
-        kFlashcards.values.map((flashcard) => flashcard.id).toList(),
-  });
+  final _studyQueue = InMemoryStore<List<FlashcardID>>(
+    kFlashcards.values.map((flashcard) => flashcard.id).toList(),
+  );
+
+  final _reviewQueue = InMemoryStore<List<FlashcardID>>([]);
 
   @override
   Stream<List<FlashcardID>> watchFlashcardsIdsToStudy() {
-    return _studyQueues.stream.map(
-      (studyQueues) => studyQueues[QueueType.toStudy]!,
-    );
+    return _studyQueue.stream;
   }
 
   @override
   Stream<List<FlashcardID>> watchReviewedQueue() {
-    return _studyQueues.stream
-        .map((studyQueues) => studyQueues[QueueType.reviewed]!);
+    return _reviewQueue.stream;
   }
 
   @override
   Future<FlashcardID> popStudyQueue() async {
-    await delay(addDelay);
-    final studyQueue = _studyQueues.value;
-    final flashcardId = studyQueue[QueueType.toStudy]!.removeAt(0);
-    _studyQueues.value = studyQueue;
     debugPrint('popped study queue');
+    await delay(addDelay);
+    final studyQueue = _studyQueue.value;
+    final flashcardId = studyQueue.removeAt(0);
+    _studyQueue.update(studyQueue);
     return flashcardId;
   }
 
   @override
   Future<void> addFlashcardIdsToStudy(List<FlashcardID> flashcardIds) async {
     await delay(addDelay);
-    _studyQueues.value[QueueType.toStudy]!.addAll(flashcardIds);
+    final studyQueue = _studyQueue.value..addAll(flashcardIds);
+    _studyQueue.update(studyQueue);
   }
 
   @override
   Future<void> addFlashcardIdToReviewedQueue(FlashcardID flashcardId) async {
     await delay(addDelay);
-    _studyQueues.value[QueueType.reviewed]!.add(flashcardId);
+    final reviewQueue = _reviewQueue.value;
+    reviewQueue.add(flashcardId);
+    _reviewQueue.update(reviewQueue);
     debugPrint("added flashcard to review queue");
   }
 
   @override
   Future<List<FlashcardID>> fetchFlashcardsIdsToStudy() async {
     await delay(addDelay);
-    return _studyQueues.value[QueueType.toStudy] ?? <FlashcardID>[];
+    return _studyQueue.value;
   }
 }

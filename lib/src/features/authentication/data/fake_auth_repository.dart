@@ -24,7 +24,7 @@ class FakeAuthRepository {
     for (final u in _users) {
       // matching email and password
       if (u.email == email && u.password == password) {
-        _authState.value = u;
+        _authState.update(u);
         return;
       }
       // same email, wrong password
@@ -53,7 +53,7 @@ class FakeAuthRepository {
   }
 
   Future<void> signOut() async {
-    _authState.value = null;
+    _authState.update(null);
   }
 
   void dispose() => _authState.close();
@@ -68,7 +68,7 @@ class FakeAuthRepository {
     // register it
     _users.add(user);
     // update the auth state
-    _authState.value = user;
+    _authState.update(user);
   }
 }
 

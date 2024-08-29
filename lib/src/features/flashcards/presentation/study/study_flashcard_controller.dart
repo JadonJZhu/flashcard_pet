@@ -9,10 +9,10 @@ class StudyFlashcardController extends _$StudyFlashcardController {
   @override
   Future<StudyFlashcardState> build() {
 
-    return _loadInitial();
+    return _loadStudyInfo();
   }
 
-  Future<StudyFlashcardState> _loadInitial() async {
+  Future<StudyFlashcardState> _loadStudyInfo() async {
     final flashcards = await ref.watch(flashcardsToStudyStreamProvider.future);
 
     return StudyFlashcardState(
