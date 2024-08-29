@@ -76,6 +76,24 @@ final flashcardIdToStudyFutureProvider =
 
 typedef FlashcardIdToStudyFutureRef
     = AutoDisposeFutureProviderRef<FlashcardID?>;
+String _$flashcardIdToStudyStreamHash() =>
+    r'43e30aa2503b5266f40c224d7e5faba75464b2cf';
+
+/// See also [flashcardIdToStudyStream].
+@ProviderFor(flashcardIdToStudyStream)
+final flashcardIdToStudyStreamProvider =
+    AutoDisposeStreamProvider<FlashcardID?>.internal(
+  flashcardIdToStudyStream,
+  name: r'flashcardIdToStudyStreamProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$flashcardIdToStudyStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FlashcardIdToStudyStreamRef
+    = AutoDisposeStreamProviderRef<FlashcardID?>;
 String _$reviewedFlashcardsIdsStreamHash() =>
     r'a0fd6e085d8856a7d9d28f4f8aa3ee6633f7fc8d';
 

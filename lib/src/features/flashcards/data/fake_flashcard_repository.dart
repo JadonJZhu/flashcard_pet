@@ -1,4 +1,5 @@
 import 'package:flashcard_pet/src/constants/dummy_data.dart';
+import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/flashcard_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flashcard_pet/src/utils/delay.dart';
@@ -21,7 +22,6 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Stream<Flashcard?> watchFlashcardById(FlashcardID flashcardId) {
-    debugPrint('repository watchFlashcardById called');
     return _flashcards.stream
         .map((flashcardsMap) => flashcardsMap[flashcardId]);
   }
@@ -30,5 +30,12 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
   Future<Flashcard?> fetchFlashcardById(FlashcardID flashcardId) async {
     delay(addDelay);
     return _flashcards.value[flashcardId];
+  }
+
+  @override
+  Future<List<Flashcard>> fetchFlashcardsByDeck(DeckID deckId) async {
+    await delay(addDelay);
+    return _flashcards.value.values
+        .where((flashcard) => flashcard.deckId == deckId).toList();
   }
 }

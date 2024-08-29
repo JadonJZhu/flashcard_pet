@@ -1,7 +1,5 @@
 import 'package:flashcard_pet/src/features/flashcards/application/study_flashcard_service.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/study_queue_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/study_flashcard_state.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'study_flashcard_controller.g.dart';
@@ -10,18 +8,16 @@ part 'study_flashcard_controller.g.dart';
 class StudyFlashcardController extends _$StudyFlashcardController {
   @override
   Future<StudyFlashcardState> build() {
-    return _loadInfo();
+
+    return _loadInitial();
   }
 
-  Future<StudyFlashcardState> _loadInfo() async {
-    debugPrint('controller _loadInfo called');
-
-    final flashcard = await ref.read(flashcardToStudyFutureProvider.future);
-    final queueCount = await ref.read(studyQueueCountFutureProvider.future);
+  Future<StudyFlashcardState> _loadInitial() async {
+    final flashcards = await ref.watch(flashcardsToStudyStreamProvider.future);
 
     return StudyFlashcardState(
-      currentCard: flashcard,
-      remainingCount: queueCount,
+      currentCard: flashcards.firstOrNull,
+      remainingCount: flashcards.length,
       isFlipped: false,
     );
   }
@@ -31,7 +27,6 @@ class StudyFlashcardController extends _$StudyFlashcardController {
 
     final studyFlashcardService = ref.read(studyFlashcardServiceProvider);
     await studyFlashcardService.moveToNextCard();
-    state = await AsyncValue.guard(_loadInfo);
   }
 
   void flipCard() {

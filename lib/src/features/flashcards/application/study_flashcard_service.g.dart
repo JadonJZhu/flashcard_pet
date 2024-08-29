@@ -41,5 +41,23 @@ final flashcardToStudyFutureProvider =
 );
 
 typedef FlashcardToStudyFutureRef = AutoDisposeFutureProviderRef<Flashcard?>;
+String _$flashcardsToStudyStreamHash() =>
+    r'bf47d4a56be20b058c2c1ffd9171dc1ced49c27d';
+
+/// See also [flashcardsToStudyStream].
+@ProviderFor(flashcardsToStudyStream)
+final flashcardsToStudyStreamProvider =
+    AutoDisposeStreamProvider<List<Flashcard>>.internal(
+  flashcardsToStudyStream,
+  name: r'flashcardsToStudyStreamProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$flashcardsToStudyStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FlashcardsToStudyStreamRef
+    = AutoDisposeStreamProviderRef<List<Flashcard>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

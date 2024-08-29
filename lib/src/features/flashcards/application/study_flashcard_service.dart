@@ -1,9 +1,11 @@
+import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/flashcard_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/study_queue_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'study_flashcard_service.g.dart';
 
@@ -17,7 +19,7 @@ class StudyFlashcardService {
   StudyQueueRepository get studyQueueRepository =>
       ref.watch(studyQueueRepositoryProvider);
 
-  /*Stream<List<Flashcard>> watchFlashcardsToStudy() {
+  Stream<List<Flashcard>> watchFlashcardsToStudy() {
     return studyQueueRepository.watchFlashcardsIdsToStudy().switchMap(
       (ids) {
         // Create a list of streams, one for each flashcard
@@ -34,11 +36,9 @@ class StudyFlashcardService {
               });
       },
     );
-  }*/
+  }
 
   Future<Flashcard?> fetchFlashcardToStudy() async {
-    debugPrint('service watchFlashcardToStudy called');
-
     final flashcardId = await ref.read(flashcardIdToStudyFutureProvider.future);
     if (flashcardId == null) {
       return null;
@@ -47,9 +47,28 @@ class StudyFlashcardService {
     return await ref.read(flashcardByIdFutureProvider(flashcardId).future);
   }
 
+  // Stream<Flashcard?> watchFlashcardToStudy() {
+  //   final flashcardIdsStream = studyQueueRepository.watchFlashcardsIdsToStudy();
+
+  //   return flashcardIdsStream.switchMap((ids) {
+  //     if (ids.isEmpty) {
+  //       return Stream.value(null);
+  //     }
+
+  //     return flashcardsRepository.watchFlashcardById(ids.first);
+  //   });
+  // }
+
   Future<void> moveToNextCard() async {
     final flashcardId = await studyQueueRepository.popStudyQueue();
     await studyQueueRepository.addFlashcardIdToReviewedQueue(flashcardId);
+  }
+
+  Future<void> loadQueueWithDeckId(DeckID deckId) async {
+    final flashcards =
+        await ref.read(flashcardsByDeckFutureProvider(deckId).future);
+    final flashcardIds = flashcards.map((flashcard) => flashcard.id).toList();
+    await studyQueueRepository.addFlashcardIdsToStudy(flashcardIds);
   }
 }
 
@@ -62,4 +81,13 @@ StudyFlashcardService studyFlashcardService(StudyFlashcardServiceRef ref) {
 Future<Flashcard?> flashcardToStudyFuture(FlashcardToStudyFutureRef ref) {
   final studyFlashcardsService = ref.watch(studyFlashcardServiceProvider);
   return studyFlashcardsService.fetchFlashcardToStudy();
+}
+
+@riverpod
+Stream<List<Flashcard>> flashcardsToStudyStream(
+    FlashcardsToStudyStreamRef ref) {
+  final studyFlashcardsService = ref.watch(studyFlashcardServiceProvider);
+  return studyFlashcardsService.watchFlashcardsToStudy().map((value) {
+    return value;
+  });
 }

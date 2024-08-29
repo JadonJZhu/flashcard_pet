@@ -38,8 +38,8 @@ final flashcardsStreamProvider =
 );
 
 typedef FlashcardsStreamRef = AutoDisposeStreamProviderRef<List<Flashcard>>;
-String _$flashcardsByDeckFutureHash() =>
-    r'168235c3622556dfcd7837b35799245e07361e91';
+String _$flashcardByIdStreamHash() =>
+    r'0922efbf4cfea9a080377a0654ddc921102fc2db';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -61,139 +61,6 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
-
-/// See also [flashcardsByDeckFuture].
-@ProviderFor(flashcardsByDeckFuture)
-const flashcardsByDeckFutureProvider = FlashcardsByDeckFutureFamily();
-
-/// See also [flashcardsByDeckFuture].
-class FlashcardsByDeckFutureFamily extends Family<AsyncValue<List<Flashcard>>> {
-  /// See also [flashcardsByDeckFuture].
-  const FlashcardsByDeckFutureFamily();
-
-  /// See also [flashcardsByDeckFuture].
-  FlashcardsByDeckFutureProvider call(
-    String deckId,
-  ) {
-    return FlashcardsByDeckFutureProvider(
-      deckId,
-    );
-  }
-
-  @override
-  FlashcardsByDeckFutureProvider getProviderOverride(
-    covariant FlashcardsByDeckFutureProvider provider,
-  ) {
-    return call(
-      provider.deckId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'flashcardsByDeckFutureProvider';
-}
-
-/// See also [flashcardsByDeckFuture].
-class FlashcardsByDeckFutureProvider
-    extends AutoDisposeFutureProvider<List<Flashcard>> {
-  /// See also [flashcardsByDeckFuture].
-  FlashcardsByDeckFutureProvider(
-    String deckId,
-  ) : this._internal(
-          (ref) => flashcardsByDeckFuture(
-            ref as FlashcardsByDeckFutureRef,
-            deckId,
-          ),
-          from: flashcardsByDeckFutureProvider,
-          name: r'flashcardsByDeckFutureProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$flashcardsByDeckFutureHash,
-          dependencies: FlashcardsByDeckFutureFamily._dependencies,
-          allTransitiveDependencies:
-              FlashcardsByDeckFutureFamily._allTransitiveDependencies,
-          deckId: deckId,
-        );
-
-  FlashcardsByDeckFutureProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.deckId,
-  }) : super.internal();
-
-  final String deckId;
-
-  @override
-  Override overrideWith(
-    FutureOr<List<Flashcard>> Function(FlashcardsByDeckFutureRef provider)
-        create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: FlashcardsByDeckFutureProvider._internal(
-        (ref) => create(ref as FlashcardsByDeckFutureRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        deckId: deckId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<List<Flashcard>> createElement() {
-    return _FlashcardsByDeckFutureProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is FlashcardsByDeckFutureProvider && other.deckId == deckId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, deckId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin FlashcardsByDeckFutureRef
-    on AutoDisposeFutureProviderRef<List<Flashcard>> {
-  /// The parameter `deckId` of this provider.
-  String get deckId;
-}
-
-class _FlashcardsByDeckFutureProviderElement
-    extends AutoDisposeFutureProviderElement<List<Flashcard>>
-    with FlashcardsByDeckFutureRef {
-  _FlashcardsByDeckFutureProviderElement(super.provider);
-
-  @override
-  String get deckId => (origin as FlashcardsByDeckFutureProvider).deckId;
-}
-
-String _$flashcardByIdStreamHash() =>
-    r'0922efbf4cfea9a080377a0654ddc921102fc2db';
 
 /// See also [flashcardByIdStream].
 @ProviderFor(flashcardByIdStream)
@@ -454,6 +321,139 @@ class _FlashcardByIdFutureProviderElement
 
   @override
   String get flashcardId => (origin as FlashcardByIdFutureProvider).flashcardId;
+}
+
+String _$flashcardsByDeckFutureHash() =>
+    r'9b42aa1139eed99e6b532e1ed24c17da2c210588';
+
+/// See also [flashcardsByDeckFuture].
+@ProviderFor(flashcardsByDeckFuture)
+const flashcardsByDeckFutureProvider = FlashcardsByDeckFutureFamily();
+
+/// See also [flashcardsByDeckFuture].
+class FlashcardsByDeckFutureFamily extends Family<AsyncValue<List<Flashcard>>> {
+  /// See also [flashcardsByDeckFuture].
+  const FlashcardsByDeckFutureFamily();
+
+  /// See also [flashcardsByDeckFuture].
+  FlashcardsByDeckFutureProvider call(
+    String deckId,
+  ) {
+    return FlashcardsByDeckFutureProvider(
+      deckId,
+    );
+  }
+
+  @override
+  FlashcardsByDeckFutureProvider getProviderOverride(
+    covariant FlashcardsByDeckFutureProvider provider,
+  ) {
+    return call(
+      provider.deckId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'flashcardsByDeckFutureProvider';
+}
+
+/// See also [flashcardsByDeckFuture].
+class FlashcardsByDeckFutureProvider
+    extends AutoDisposeFutureProvider<List<Flashcard>> {
+  /// See also [flashcardsByDeckFuture].
+  FlashcardsByDeckFutureProvider(
+    String deckId,
+  ) : this._internal(
+          (ref) => flashcardsByDeckFuture(
+            ref as FlashcardsByDeckFutureRef,
+            deckId,
+          ),
+          from: flashcardsByDeckFutureProvider,
+          name: r'flashcardsByDeckFutureProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$flashcardsByDeckFutureHash,
+          dependencies: FlashcardsByDeckFutureFamily._dependencies,
+          allTransitiveDependencies:
+              FlashcardsByDeckFutureFamily._allTransitiveDependencies,
+          deckId: deckId,
+        );
+
+  FlashcardsByDeckFutureProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.deckId,
+  }) : super.internal();
+
+  final String deckId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Flashcard>> Function(FlashcardsByDeckFutureRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FlashcardsByDeckFutureProvider._internal(
+        (ref) => create(ref as FlashcardsByDeckFutureRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        deckId: deckId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Flashcard>> createElement() {
+    return _FlashcardsByDeckFutureProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FlashcardsByDeckFutureProvider && other.deckId == deckId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, deckId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin FlashcardsByDeckFutureRef
+    on AutoDisposeFutureProviderRef<List<Flashcard>> {
+  /// The parameter `deckId` of this provider.
+  String get deckId;
+}
+
+class _FlashcardsByDeckFutureProviderElement
+    extends AutoDisposeFutureProviderElement<List<Flashcard>>
+    with FlashcardsByDeckFutureRef {
+  _FlashcardsByDeckFutureProviderElement(super.provider);
+
+  @override
+  String get deckId => (origin as FlashcardsByDeckFutureProvider).deckId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

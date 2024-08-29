@@ -24,6 +24,7 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    
     ref.listen(
       studyFlashcardControllerProvider,
       (_, state) => state.showAlertDialogOnError(context),

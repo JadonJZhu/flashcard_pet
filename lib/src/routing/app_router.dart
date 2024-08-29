@@ -1,5 +1,5 @@
 import 'package:flashcard_pet/src/features/authentication/data/fake_auth_repository.dart';
-import 'package:flashcard_pet/src/features/decks/presentation/deck_list_screen.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/decks_list_screen.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/study_flashcard_screen.dart';
 import 'package:flashcard_pet/src/routing/go_router_refresh_stream.dart';
 import 'package:flashcard_pet/src/routing/ui/scaffold_with_nested_navigation.dart';

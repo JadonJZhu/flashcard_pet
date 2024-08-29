@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'fake_deck_repository.dart';
+part of 'fake_decks_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -37,5 +37,20 @@ final decksListStreamProvider = AutoDisposeStreamProvider<List<Deck>>.internal(
 );
 
 typedef DecksListStreamRef = AutoDisposeStreamProviderRef<List<Deck>>;
+String _$decksListFutureHash() => r'51bf066478d6efb70a60179e1471ab393c93c8aa';
+
+/// See also [decksListFuture].
+@ProviderFor(decksListFuture)
+final decksListFutureProvider = AutoDisposeFutureProvider<List<Deck>>.internal(
+  decksListFuture,
+  name: r'decksListFutureProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$decksListFutureHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DecksListFutureRef = AutoDisposeFutureProviderRef<List<Deck>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

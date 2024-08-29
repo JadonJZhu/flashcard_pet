@@ -3,6 +3,7 @@ import 'package:flashcard_pet/src/features/flashcards/data/study_queue_repositor
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flashcard_pet/src/utils/delay.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
+import 'package:flutter/foundation.dart';
 
 class FakeStudyQueueRepository implements StudyQueueRepository {
   FakeStudyQueueRepository({this.addDelay = true});
@@ -31,22 +32,24 @@ class FakeStudyQueueRepository implements StudyQueueRepository {
   @override
   Future<FlashcardID> popStudyQueue() async {
     await delay(addDelay);
-    final studyQueue = _studyQueues.value[QueueType.toStudy]!;
-    final flashcardId = studyQueue.removeAt(0);
-    _studyQueues.value[QueueType.toStudy] = studyQueue;
+    final studyQueue = _studyQueues.value;
+    final flashcardId = studyQueue[QueueType.toStudy]!.removeAt(0);
+    _studyQueues.value = studyQueue;
+    debugPrint('popped study queue');
     return flashcardId;
   }
 
   @override
-  Future<void> addFlashcardIdToStudy(FlashcardID flashcardId) async {
+  Future<void> addFlashcardIdsToStudy(List<FlashcardID> flashcardIds) async {
     await delay(addDelay);
-    _studyQueues.value[QueueType.toStudy]!.add(flashcardId);
+    _studyQueues.value[QueueType.toStudy]!.addAll(flashcardIds);
   }
 
   @override
   Future<void> addFlashcardIdToReviewedQueue(FlashcardID flashcardId) async {
     await delay(addDelay);
     _studyQueues.value[QueueType.reviewed]!.add(flashcardId);
+    debugPrint("added flashcard to review queue");
   }
 
   @override

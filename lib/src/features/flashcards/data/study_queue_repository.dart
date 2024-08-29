@@ -11,7 +11,7 @@ enum QueueType {
 abstract class StudyQueueRepository {
   Stream<List<FlashcardID>> watchFlashcardsIdsToStudy();
   Future<List<FlashcardID>> fetchFlashcardsIdsToStudy();
-  Future<void> addFlashcardIdToStudy(FlashcardID flashcardId);
+  Future<void> addFlashcardIdsToStudy(List<FlashcardID> flashcardIds);
   Future<FlashcardID> popStudyQueue();
 
   Stream<List<FlashcardID>> watchReviewedQueue();
@@ -43,6 +43,13 @@ Future<FlashcardID?> flashcardIdToStudyFuture(
   final flashcardsToStudy =
       await ref.watch(flashcardIdsToStudyFutureProvider.future);
   return flashcardsToStudy.firstOrNull;
+}
+
+@riverpod
+Stream<FlashcardID?> flashcardIdToStudyStream(
+    FlashcardIdToStudyStreamRef ref) {
+  final studyQueueRepository = ref.watch(studyQueueRepositoryProvider);
+  return studyQueueRepository.watchFlashcardsIdsToStudy().map((flashcardIds) => flashcardIds.firstOrNull);
 }
 
 @riverpod

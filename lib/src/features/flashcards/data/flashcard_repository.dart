@@ -10,6 +10,7 @@ abstract class FlashcardsRepository {
   Stream<List<Flashcard>> watchFlashcards();
   Stream<Flashcard?> watchFlashcardById(FlashcardID flashcardId);
   Future<Flashcard?> fetchFlashcardById(FlashcardID flashcardId);
+  Future<List<Flashcard>> fetchFlashcardsByDeck(DeckID deckId);
 }
 
 @Riverpod(keepAlive: true)
@@ -24,15 +25,10 @@ Stream<List<Flashcard>> flashcardsStream(FlashcardsStreamRef ref) {
   return flashcardsRepository.watchFlashcards();
 }
 
-@riverpod
-Future<List<Flashcard>> flashcardsByDeckFuture(
-    FlashcardsByDeckFutureRef ref, DeckID deckId) async {
-  final flashcards = await ref.watch(flashcardsStreamProvider.future);
-  return flashcards.where((flashcard) => flashcard.deckId == deckId).toList();
-}
 
 @riverpod
-Stream<Flashcard?> flashcardByIdStream(FlashcardByIdStreamRef ref, FlashcardID flashcardId) {
+Stream<Flashcard?> flashcardByIdStream(
+    FlashcardByIdStreamRef ref, FlashcardID flashcardId) {
   final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
   return flashcardsRepository.watchFlashcardById(flashcardId);
 }
@@ -44,7 +40,8 @@ Future<Flashcard?> flashcardByIdFuture(
   return flashcardsRepository.fetchFlashcardById(flashcardId);
 }
 
-
-
-
-
+@riverpod
+Future<List<Flashcard>> flashcardsByDeckFuture(FlashcardsByDeckFutureRef ref, DeckID deckId) {
+  final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
+  return flashcardsRepository.fetchFlashcardsByDeck(deckId);
+}
