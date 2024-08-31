@@ -7,12 +7,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'decks_list_screen_controller.g.dart';
 
 @riverpod
-class DecksListScreenController extends _$DecksListScreenController
-    with NotifierMounted {
+class DecksListScreenController extends _$DecksListScreenController {
   @override
   Future<List<Deck>> build() async {
-    ref.onDispose(setUnmounted);
-
     final decks = await ref.watch(decksListStreamProvider.future);
     return decks;
   }
@@ -27,14 +24,10 @@ class DecksListScreenController extends _$DecksListScreenController
         await AsyncValue.guard(() => studyService.loadQueueWithDeckId(deckId));
 
     if (loadState.hasError) {
-      if (mounted) {
-        state = AsyncError(loadState.error!, loadState.stackTrace!);
-      }
+      state = AsyncError(loadState.error!, loadState.stackTrace!);
       return false;
     } else {
-      if (mounted) {
-        state = AsyncData(decks ?? []);
-      }
+      state = AsyncData(decks ?? []);
       return true;
     }
   }

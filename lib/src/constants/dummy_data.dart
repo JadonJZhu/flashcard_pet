@@ -8,7 +8,6 @@ const Map<DeckID, Deck> kDecks = {
   '1': Deck(
     id: '1',
     title: "Deck 1",
-    flashcardIds: ['1', '2'],
   ),
 };
 

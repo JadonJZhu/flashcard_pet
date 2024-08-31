@@ -12,6 +12,7 @@ class DeckTile extends StatelessWidget {
     return ListTile(
       title: Text(deck.title),
       onTap: onPressed,
+      
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flashcard_pet/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/decks_list_screen.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/edit_deck/deck_edit_screen.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/study_flashcard_screen.dart';
 import 'package:flashcard_pet/src/routing/go_router_refresh_stream.dart';
 import 'package:flashcard_pet/src/routing/ui/scaffold_with_nested_navigation.dart';
@@ -11,7 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'app_router.g.dart';
 
 enum AppRoute {
-  home,
+  decks,
+  edit,
   study,
   account,
   signIn,
@@ -30,7 +32,7 @@ enum NavigationItem {
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHomeKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+    GlobalKey<NavigatorState>(debugLabel: 'shellDecks');
 final _shellNavigatorStudyKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellStudy');
 
@@ -38,7 +40,7 @@ final _shellNavigatorStudyKey =
 GoRouter goRouter(GoRouterRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/decks',
     debugLogDiagnostics: false,
     navigatorKey: _rootNavigatorKey,
     redirect: (context, state) {
@@ -46,10 +48,10 @@ GoRouter goRouter(GoRouterRef ref) {
       final path = state.uri.path;
       if (isLoggedIn) {
         if (path == '/signIn') {
-          return '/home';
+          return '/decks';
         }
       } else {
-        if (path == '/home/account') {
+        if (path == '/decks/account') {
           return '/signIn';
         }
       }
@@ -69,12 +71,20 @@ GoRouter goRouter(GoRouterRef ref) {
             routes: [
               // top route inside branch
               GoRoute(
-                path: '/home',
-                name: AppRoute.home.name,
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: DeckListScreen(),
-                ),
-              ),
+                  path: '/decks',
+                  name: AppRoute.decks.name,
+                  pageBuilder: (context, state) => const NoTransitionPage(
+                        child: DeckListScreen(),
+                      ),
+                  routes: [
+                    GoRoute(
+                      path: 'edit',
+                      name: AppRoute.edit.name,
+                      pageBuilder: (context, state) => const NoTransitionPage(
+                        child: DeckEditScreen(),
+                      ),
+                    ),
+                  ]),
             ],
           ),
           // second branch (study)

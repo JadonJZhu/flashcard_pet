@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flashcard_repository.dart';
+part of 'flashcards_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator

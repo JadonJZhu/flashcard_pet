@@ -2,7 +2,7 @@ import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'flashcard_repository.g.dart';
+part 'flashcards_repository.g.dart';
 
 // TODO: Implement with Firebase
 
@@ -11,6 +11,8 @@ abstract class FlashcardsRepository {
   Stream<Flashcard?> watchFlashcardById(FlashcardID flashcardId);
   Future<Flashcard?> fetchFlashcardById(FlashcardID flashcardId);
   Future<List<Flashcard>> fetchFlashcardsByDeck(DeckID deckId);
+  Future<void> setFlashcard(Flashcard card);
+  Future<void> setFlashcards(List<Flashcard> cards);
 }
 
 @Riverpod(keepAlive: true)
@@ -24,7 +26,6 @@ Stream<List<Flashcard>> flashcardsStream(FlashcardsStreamRef ref) {
   final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
   return flashcardsRepository.watchFlashcards();
 }
-
 
 @riverpod
 Stream<Flashcard?> flashcardByIdStream(
@@ -41,7 +42,8 @@ Future<Flashcard?> flashcardByIdFuture(
 }
 
 @riverpod
-Future<List<Flashcard>> flashcardsByDeckFuture(FlashcardsByDeckFutureRef ref, DeckID deckId) {
+Future<List<Flashcard>> flashcardsByDeckFuture(
+    FlashcardsByDeckFutureRef ref, DeckID deckId) {
   final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
   return flashcardsRepository.fetchFlashcardsByDeck(deckId);
 }

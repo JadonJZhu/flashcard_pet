@@ -1,8 +1,8 @@
 import 'package:flashcard_pet/src/exceptions/async_error_logger.dart';
 import 'package:flashcard_pet/src/features/authentication/data/fake_auth_repository.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/fake_flashcard_repository.dart';
+import 'package:flashcard_pet/src/features/flashcards/data/fake_flashcards_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/fake_study_queue_repository.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/flashcard_repository.dart';
+import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/study_queue_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

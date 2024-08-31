@@ -1,6 +1,6 @@
 {
   "appTitle": "My Shop",
-  "previewNotice": "This is a preview of the final app that you'll build in the course. More features will be added before the course is complete.",
+  "previewNotice": "This is a preview of the final app that you''ll build in the course. More features will be added before the course is complete.",
   "appBarTitle": "My Shop",
   "@appBarTitle": {
     "description": "The title to be shown in the menu bar"
@@ -31,9 +31,9 @@
   "emailHint": "test@test.com",
   "password8CharactersLabel": "Password (8+ characters)",
   "passwordLabel": "Password",
-  "invalidEmailEmpty": "Email can't be empty",
+  "invalidEmailEmpty": "Email can''t be empty",
   "invalidPasswordTooShort": "Password is too short",
-  "invalidPasswordEmpty": "Password can't be empty",
+  "invalidPasswordEmpty": "Password can''t be empty",
   "logout": "Logout",
   "submit": "Submit",
   "invalidEmail": "Invalid email",
@@ -74,7 +74,7 @@
   "state": "State",
   "postalCode": "Postal Code",
   "country": "Country",
-  "cantBeEmpty": "Can't be empty",
+  "cantBeEmpty": "Can''t be empty",
   "@cantBeEmpty": {
     "description": "Message for product fields that can't be empty"
   },
@@ -118,8 +118,8 @@
   "cardPayment": "Card Payment",
   "saveCardDuringPayment": "Save card during payment",
   "devBuildTestingNotice": "[DEV build] Use 4242 4242 4242 4242 for testing",
-  "missingAddress": "The operation can't be completed (missing address)",
-  "userNotSignedIn": "The operation can't be completed (not signed in)",
+  "missingAddress": "The operation can''t be completed (missing address)",
+  "userNotSignedIn": "The operation can''t be completed (not signed in)",
   "orderPlaced": "Order placed",
   "total": "Total",
   "totalValue": "Total: {value}",
@@ -174,7 +174,7 @@
   },
   "addToCart": "Add to Cart",
   "outOfStock": "Out of Stock",
-  "cantAddItemToCart": "Can't add item to cart",
+  "cantAddItemToCart": "Can''t add item to cart",
   "cantUpdateQuantity": "Could not update quantity",
   "cantDeleteItem": "Could not delete item",
   "alreadyAddedToCart": "Already added to cart",

@@ -1,5 +1,4 @@
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
-import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/decks_list_screen_controller.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/deck_tile.dart';
 import 'package:flashcard_pet/src/routing/app_router.dart';
@@ -13,10 +12,17 @@ class DeckListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Deck List Screen"),
-        ),
-        body: const DeckListScreenContents());
+      appBar: AppBar(
+        title: const Text("Deck List Screen"),
+        actions: [
+          IconButton(
+            onPressed: () => context.goNamed(AppRoute.edit.name),
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+      body: const DeckListScreenContents(),
+    );
   }
 }
 

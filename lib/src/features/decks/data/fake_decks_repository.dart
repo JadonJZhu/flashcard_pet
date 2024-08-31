@@ -13,7 +13,7 @@ class FakeDecksRepository {
 
   final bool addDelay;
 
-  final _decks = InMemoryStore<Map<DeckID, Deck>>(kDecks);
+  final _decks = InMemoryStore<Map<DeckID, Deck>>(Map.of(kDecks));
 
   Stream<List<Deck>> watchDecks() {
     return _decks.stream.map(
@@ -24,6 +24,18 @@ class FakeDecksRepository {
   Future<List<Deck>> fetchDecks() async {
     await delay(addDelay);
     return _decks.value.values.toList();
+  }
+
+  Future<Deck?> fetchDeckById(DeckID deckId) async {
+    await delay(addDelay);
+    return _decks.value[deckId];
+  }
+
+  Future<void> setDeck(Deck deck) async {
+    await delay(addDelay);
+    final decks = _decks.value;
+    decks[deck.id] = deck;
+    _decks.update(decks);
   }
 }
 

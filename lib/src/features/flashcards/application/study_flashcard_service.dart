@@ -1,5 +1,5 @@
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/flashcard_repository.dart';
+import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/study_queue_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
