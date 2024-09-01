@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/constants/app_sizes.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flashcard_pet/src/features/decks/presentation/edit_deck/deck_edit_form_fields.dart';
-import 'package:flashcard_pet/src/features/decks/presentation/edit_deck/deck_editor_controller.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_form_fields.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_editor_controller.dart';
 import 'package:flashcard_pet/src/routing/app_router.dart';
 
 class DeckEditScreen extends ConsumerWidget {
@@ -65,19 +65,23 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
           gapH24,
           Text('Flashcards', style: Theme.of(context).textTheme.titleLarge),
           gapH16,
-          ...state.flashcards.asMap().entries.map((entry) {
-            final index = entry.key;
-            final flashcard = entry.value;
-            return FlashcardField(
-              key: ValueKey(flashcard.id ?? index),
-              initialFront: flashcard.front,
-              initialBack: flashcard.back,
-              onChangedFront: (value) =>
-                  controller.updateFlashcard(index, front: value),
-              onChangedBack: (value) =>
-                  controller.updateFlashcard(index, back: value),
-            );
-          }),
+          ...state.flashcards.asMap().entries.map(
+            (entry) {
+              final index = entry.key;
+              final flashcard = entry.value;
+              return FlashcardField(
+                key: ValueKey(flashcard.id ?? index),
+                initialFront: flashcard.front,
+                initialBack: flashcard.back,
+                onChangedFront: (value) =>
+                    controller.updateFlashcard(index, front: value),
+                onChangedBack: (value) =>
+                    controller.updateFlashcard(index, back: value),
+                onDelete: () => controller.deleteFlashcard(index),
+                index: index + 1,
+              );
+            },
+          ),
           gapH16,
           ElevatedButton(
             onPressed: controller.addFlashcard,
@@ -100,4 +104,3 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
     );
   }
 }
-

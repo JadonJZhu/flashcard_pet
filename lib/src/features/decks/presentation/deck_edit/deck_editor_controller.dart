@@ -1,3 +1,4 @@
+import 'package:flashcard_pet/src/features/flashcards/application/study_flashcard_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -54,13 +55,30 @@ class DeckEditorController extends _$DeckEditorController {
 
   void updateFlashcard(int index, {String? front, String? back}) {
     final updatedFlashcards =
-        List<FlashcardState>.from(state.value!.flashcards);
+        List<FlashcardState>.of(state.value!.flashcards);
     updatedFlashcards[index] = updatedFlashcards[index].copyWith(
       front: front ?? updatedFlashcards[index].front,
       back: back ?? updatedFlashcards[index].back,
       isModified: true,
     );
     state = AsyncData(state.value!.copyWith(flashcards: updatedFlashcards));
+  }
+
+  void deleteFlashcard(int index) {
+    final updatedFlashcards =
+        List<FlashcardState>.of(state.value!.flashcards);
+    final deletedFlashcard = updatedFlashcards.removeAt(index);
+    if (deletedFlashcard.id != null) {
+      state = AsyncData(state.value!.copyWith(
+        flashcards: updatedFlashcards,
+        deletedFlashcardIds: [
+          ...state.value!.deletedFlashcardIds,
+          deletedFlashcard.id!
+        ],
+      ));
+    } else {
+      state = AsyncData(state.value!.copyWith(flashcards: updatedFlashcards));
+    }
   }
 
   Future<void> saveDeck() async {
@@ -87,6 +105,8 @@ class DeckEditorController extends _$DeckEditorController {
         .read(flashcardsRepositoryProvider)
         .setFlashcards(flashcardsToUpdate);
 
+    await ref.read(studyFlashcardServiceProvider).deleteFlashcardsById(currentValue.deletedFlashcardIds);
+
     state = currentState;
   }
 }
@@ -95,18 +115,22 @@ class DeckEditorState {
   DeckEditorState({
     required this.deck,
     required this.flashcards,
+    this.deletedFlashcardIds = const [],
   });
 
   final Deck deck;
   final List<FlashcardState> flashcards;
+  final List<FlashcardID> deletedFlashcardIds;
 
   DeckEditorState copyWith({
     Deck? deck,
     List<FlashcardState>? flashcards,
+    List<FlashcardID>? deletedFlashcardIds,
   }) {
     return DeckEditorState(
       deck: deck ?? this.deck,
       flashcards: flashcards ?? this.flashcards,
+      deletedFlashcardIds: deletedFlashcardIds ?? this.deletedFlashcardIds,
     );
   }
 }

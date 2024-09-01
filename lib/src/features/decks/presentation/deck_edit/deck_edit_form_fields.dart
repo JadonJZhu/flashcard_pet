@@ -36,6 +36,8 @@ class FlashcardField extends StatelessWidget {
   final String initialBack;
   final ValueChanged<String> onChangedFront;
   final ValueChanged<String> onChangedBack;
+  final VoidCallback onDelete;
+  final int index;
 
   const FlashcardField({
     super.key,
@@ -43,25 +45,42 @@ class FlashcardField extends StatelessWidget {
     required this.initialBack,
     required this.onChangedFront,
     required this.onChangedBack,
+    required this.onDelete,
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: Sizes.p16),
-      child: ResponsiveTwoColumnLayout(
-        startContent: FlashcardSideField(
-          initialValue: initialFront,
-          labelText: 'Front',
-          onChanged: onChangedFront,
-        ),
-        endContent: FlashcardSideField(
-          initialValue: initialBack,
-          labelText: 'Back',
-          onChanged: onChangedBack,
-        ),
-        spacing: 16,
-        breakpoint: Breakpoint.tablet,
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Row(
+        children: [
+          CircleAvatar(
+            foregroundColor: Colors.black,
+            child: Text('$index'),
+          ),
+          gapW8,
+          Expanded(
+            child: ResponsiveTwoColumnLayout(
+              startContent: FlashcardSideField(
+                initialValue: initialFront,
+                labelText: 'Front',
+                onChanged: onChangedFront,
+              ),
+              endContent: FlashcardSideField(
+                initialValue: initialBack,
+                labelText: 'Back',
+                onChanged: onChangedBack,
+              ),
+              spacing: 16,
+              breakpoint: Breakpoint.tablet,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: onDelete,
+          ),
+        ],
       ),
     );
   }
@@ -89,7 +108,7 @@ class FlashcardSideField extends StatelessWidget {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter the $labelText of the flashcard';
+          return 'Please enter the ${labelText.toLowerCase()} of the flashcard';
         }
         return null;
       },

@@ -22,9 +22,9 @@ class StudyFlashcardService {
     return studyQueueRepository.watchFlashcardsIdsToStudy().switchMap(
       (ids) {
         // Create a list of streams, one for each flashcard
-        List<Stream<Flashcard?>> cardStreams = ids
-            .map((id) => flashcardsRepository.watchFlashcardById(id))
-            .toList();
+        List<Stream<Flashcard?>> cardStreams = ids.map((id) {
+          return flashcardsRepository.watchFlashcardById(id);
+        }).toList();
 
         // Combine the latest values from all streams
         return cardStreams.isEmpty
@@ -35,6 +35,11 @@ class StudyFlashcardService {
               });
       },
     );
+  }
+
+  Future<void> deleteFlashcardsById(List<FlashcardID> ids) async {
+    await studyQueueRepository.deleteFlashcardsById(ids);
+    await flashcardsRepository.deleteFlashcardsById(ids);
   }
 
   Future<Flashcard?> fetchFlashcardToStudy() async {

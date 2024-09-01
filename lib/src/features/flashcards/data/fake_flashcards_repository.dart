@@ -10,7 +10,8 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
   final bool addDelay;
 
   /// Preload with the default list of flashcards when the app starts
-  final _flashcards = InMemoryStore<Map<FlashcardID, Flashcard>>(Map.of(kFlashcards));
+  final _flashcards =
+      InMemoryStore<Map<FlashcardID, Flashcard>>(Map.of(kFlashcards));
 
   @override
   Stream<List<Flashcard>> watchFlashcards() {
@@ -53,6 +54,16 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
     final flashcards = _flashcards.value;
     for (final card in cards) {
       flashcards[card.id] = card;
+    }
+    _flashcards.update(flashcards);
+  }
+
+  @override
+  Future<void> deleteFlashcardsById(List<FlashcardID> ids) async {
+    await delay(addDelay);
+    final flashcards = _flashcards.value;
+    for (final id in ids) {
+      flashcards.remove(id);
     }
     _flashcards.update(flashcards);
   }

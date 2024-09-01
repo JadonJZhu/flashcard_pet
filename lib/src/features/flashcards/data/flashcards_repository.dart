@@ -13,6 +13,7 @@ abstract class FlashcardsRepository {
   Future<List<Flashcard>> fetchFlashcardsByDeck(DeckID deckId);
   Future<void> setFlashcard(Flashcard card);
   Future<void> setFlashcards(List<Flashcard> cards);
+  Future<void> deleteFlashcardsById(List<FlashcardID> ids);
 }
 
 @Riverpod(keepAlive: true)

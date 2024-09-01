@@ -7,7 +7,7 @@ part of 'deck_editor_controller.dart';
 // **************************************************************************
 
 String _$deckEditorControllerHash() =>
-    r'ba4c3837b3b998ccf7ecc887560275da3353069b';
+    r'0f18325ba5c9484427b2b290185e2fa696b4ea8e';
 
 /// Copied from Dart SDK
 class _SystemHash {

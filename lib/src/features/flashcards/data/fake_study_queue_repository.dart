@@ -28,19 +28,32 @@ class FakeStudyQueueRepository implements StudyQueueRepository {
 
   @override
   Future<FlashcardID> popStudyQueue() async {
-    debugPrint('popped study queue');
     await delay(addDelay);
+    debugPrint('popped study queue');
     final studyQueue = _studyQueue.value;
     final flashcardId = studyQueue.removeAt(0);
     _studyQueue.update(studyQueue);
+    debugPrint('${studyQueue.length} flashcards left in study queue');
     return flashcardId;
+  }
+
+  @override
+  Future<void> deleteFlashcardsById(List<FlashcardID> ids) async {
+    await delay(addDelay);
+    final studyQueue = _studyQueue.value;
+    for (final id in ids) {
+      studyQueue.remove(id);
+    }
+    _studyQueue.update(studyQueue);
   }
 
   @override
   Future<void> addFlashcardIdsToStudy(List<FlashcardID> flashcardIds) async {
     await delay(addDelay);
+    debugPrint('added ${flashcardIds.length} flashcard(s) to study queue');
     final studyQueue = _studyQueue.value..addAll(flashcardIds);
     _studyQueue.update(studyQueue);
+    debugPrint('${studyQueue.length} flashcards left in study queue');
   }
 
   @override

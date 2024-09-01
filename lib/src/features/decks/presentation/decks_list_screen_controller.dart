@@ -1,7 +1,6 @@
 import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/features/flashcards/application/study_flashcard_service.dart';
-import 'package:flashcard_pet/src/utils/notifier_mounted.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'decks_list_screen_controller.g.dart';

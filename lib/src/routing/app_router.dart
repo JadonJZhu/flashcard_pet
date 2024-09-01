@@ -1,6 +1,6 @@
 import 'package:flashcard_pet/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/decks_list_screen.dart';
-import 'package:flashcard_pet/src/features/decks/presentation/edit_deck/deck_edit_screen.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_screen.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/study_flashcard_screen.dart';
 import 'package:flashcard_pet/src/routing/go_router_refresh_stream.dart';
 import 'package:flashcard_pet/src/routing/ui/scaffold_with_nested_navigation.dart';
@@ -78,12 +78,16 @@ GoRouter goRouter(GoRouterRef ref) {
                       ),
                   routes: [
                     GoRoute(
-                      path: 'edit',
-                      name: AppRoute.edit.name,
-                      pageBuilder: (context, state) => const NoTransitionPage(
-                        child: DeckEditScreen(),
-                      ),
-                    ),
+                        path: 'edit',
+                        name: AppRoute.edit.name,
+                        pageBuilder: (context, state) {
+                          final deckId = state.uri.queryParameters['deckId'];
+                          return NoTransitionPage(
+                            child: DeckEditScreen(
+                              deckId: deckId,
+                            ),
+                          );
+                        }),
                   ]),
             ],
           ),

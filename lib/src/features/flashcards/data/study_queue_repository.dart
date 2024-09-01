@@ -13,6 +13,7 @@ abstract class StudyQueueRepository {
   Future<List<FlashcardID>> fetchFlashcardsIdsToStudy();
   Future<void> addFlashcardIdsToStudy(List<FlashcardID> flashcardIds);
   Future<FlashcardID> popStudyQueue();
+  Future<void> deleteFlashcardsById(List<FlashcardID> ids);
 
   Stream<List<FlashcardID>> watchReviewedQueue();
   Future<void> addFlashcardIdToReviewedQueue(FlashcardID flashcardId);
@@ -46,10 +47,11 @@ Future<FlashcardID?> flashcardIdToStudyFuture(
 }
 
 @riverpod
-Stream<FlashcardID?> flashcardIdToStudyStream(
-    FlashcardIdToStudyStreamRef ref) {
+Stream<FlashcardID?> flashcardIdToStudyStream(FlashcardIdToStudyStreamRef ref) {
   final studyQueueRepository = ref.watch(studyQueueRepositoryProvider);
-  return studyQueueRepository.watchFlashcardsIdsToStudy().map((flashcardIds) => flashcardIds.firstOrNull);
+  return studyQueueRepository
+      .watchFlashcardsIdsToStudy()
+      .map((flashcardIds) => flashcardIds.firstOrNull);
 }
 
 @riverpod
