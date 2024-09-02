@@ -1,4 +1,5 @@
 import 'package:flashcard_pet/src/features/flashcards/application/study_flashcard_service.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -38,7 +39,6 @@ class DeckEditorController extends _$DeckEditorController {
       flashcards:
           flashcards.map((f) => FlashcardState.fromFlashcard(f)).toList(),
     );
-    
   }
 
   void updateDeckTitle(String title) {
@@ -53,9 +53,9 @@ class DeckEditorController extends _$DeckEditorController {
     ));
   }
 
-  void updateFlashcard(int index, {String? front, String? back}) {
-    final updatedFlashcards =
-        List<FlashcardState>.of(state.value!.flashcards);
+  void updateFlashcard(int index,
+      {quill.Document? front, quill.Document? back}) {
+    final updatedFlashcards = List<FlashcardState>.of(state.value!.flashcards);
     updatedFlashcards[index] = updatedFlashcards[index].copyWith(
       front: front ?? updatedFlashcards[index].front,
       back: back ?? updatedFlashcards[index].back,
@@ -65,8 +65,7 @@ class DeckEditorController extends _$DeckEditorController {
   }
 
   void deleteFlashcard(int index) {
-    final updatedFlashcards =
-        List<FlashcardState>.of(state.value!.flashcards);
+    final updatedFlashcards = List<FlashcardState>.of(state.value!.flashcards);
     final deletedFlashcard = updatedFlashcards.removeAt(index);
     if (deletedFlashcard.id != null) {
       state = AsyncData(state.value!.copyWith(
@@ -87,27 +86,58 @@ class DeckEditorController extends _$DeckEditorController {
 
     state = const AsyncLoading();
 
-    // Save or update the deck
-    await ref.read(decksRepositoryProvider).setDeck(currentValue.deck);
+    try {
+      // Save or update the deck
+      await ref.read(decksRepositoryProvider).setDeck(currentValue.deck);
 
-    // Update flashcards
-    final flashcardsToUpdate = currentValue.flashcards
-        .where((fs) => fs.isModified)
-        .map((fs) => Flashcard(
-              id: fs.id ?? const Uuid().v4(),
-              deckId: currentValue.deck.id,
-              front: fs.front,
-              back: fs.back,
-            ))
-        .toList();
+      // Update flashcards
+      final flashcardsToUpdate = currentValue.flashcards
+          .where((fs) => fs.isModified)
+          .map((fs) => Flashcard(
+                id: fs.id ?? const Uuid().v4(),
+                deckId: currentValue.deck.id,
+                frontContent: fs.front,
+                backContent: fs.back,
+              ))
+          .toList();
 
-    await ref
-        .read(flashcardsRepositoryProvider)
-        .setFlashcards(flashcardsToUpdate);
+      await ref
+          .read(flashcardsRepositoryProvider)
+          .setFlashcards(flashcardsToUpdate);
 
-    await ref.read(studyFlashcardServiceProvider).deleteFlashcardsById(currentValue.deletedFlashcardIds);
+      await ref
+          .read(studyFlashcardServiceProvider)
+          .deleteFlashcardsById(currentValue.deletedFlashcardIds);
 
-    state = currentState;
+      state = currentState;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
+  }
+
+  Future<void> deleteDeck() async {
+    final currentValue = state.value!;
+
+    state = const AsyncLoading();
+
+    try {
+      await ref
+          .read(studyFlashcardServiceProvider)
+          .deleteFlashcardsByDeckId(currentValue.deck.id);
+
+      await ref
+          .read(decksRepositoryProvider)
+          .deleteDeckById(currentValue.deck.id);
+
+      state = AsyncData(
+        DeckEditorState(
+          deck: Deck(id: const Uuid().v4(), title: ''),
+          flashcards: [FlashcardState.empty()],
+        ),
+      );
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
   }
 }
 
@@ -144,24 +174,27 @@ class FlashcardState {
   });
 
   final String? id;
-  final String front;
-  final String back;
+  final quill.Document front;
+  final quill.Document back;
   final bool isModified;
 
-  factory FlashcardState.empty() =>
-      FlashcardState(front: '', back: '', isModified: true);
+  factory FlashcardState.empty() => FlashcardState(
+        front: quill.Document(),
+        back: quill.Document(),
+        isModified: true,
+      );
 
   factory FlashcardState.fromFlashcard(Flashcard flashcard) => FlashcardState(
         id: flashcard.id,
-        front: flashcard.front,
-        back: flashcard.back,
+        front: flashcard.frontContent,
+        back: flashcard.backContent,
         isModified: false,
       );
 
   FlashcardState copyWith({
     String? id,
-    String? front,
-    String? back,
+    quill.Document? front,
+    quill.Document? back,
     bool? isModified,
   }) {
     return FlashcardState(

@@ -2,13 +2,17 @@ import 'package:flashcard_pet/src/common_widgets/responsive_two_column_layout.da
 import 'package:flashcard_pet/src/constants/app_sizes.dart';
 import 'package:flashcard_pet/src/constants/breakpoints.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class TitleField extends StatelessWidget {
   final String initialValue;
   final ValueChanged<String> onChanged;
 
-  const TitleField(
-      {super.key, required this.initialValue, required this.onChanged});
+  const TitleField({
+    super.key,
+    required this.initialValue,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +36,10 @@ class TitleField extends StatelessWidget {
 }
 
 class FlashcardField extends StatelessWidget {
-  final String initialFront;
-  final String initialBack;
-  final ValueChanged<String> onChangedFront;
-  final ValueChanged<String> onChangedBack;
+  final quill.Document initialFront;
+  final quill.Document initialBack;
+  final ValueChanged<quill.Document> onChangedFront;
+  final ValueChanged<quill.Document> onChangedBack;
   final VoidCallback onDelete;
   final int index;
 
@@ -54,6 +58,7 @@ class FlashcardField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
             foregroundColor: Colors.black,
@@ -86,10 +91,10 @@ class FlashcardField extends StatelessWidget {
   }
 }
 
-class FlashcardSideField extends StatelessWidget {
-  final String initialValue;
+class FlashcardSideField extends StatefulWidget {
+  final quill.Document initialValue;
   final String labelText;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<quill.Document> onChanged;
 
   const FlashcardSideField({
     super.key,
@@ -99,21 +104,56 @@ class FlashcardSideField extends StatelessWidget {
   });
 
   @override
+  State<FlashcardSideField> createState() => _FlashcardSideFieldState();
+}
+
+class _FlashcardSideFieldState extends State<FlashcardSideField> {
+  late quill.QuillController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = quill.QuillController(
+      document: widget.initialValue,
+      selection: const TextSelection.collapsed(offset: 0),
+    );
+    _controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    widget.onChanged(_controller.document);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onTextChanged);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: const OutlineInputBorder(),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter the ${labelText.toLowerCase()} of the flashcard';
-        }
-        return null;
-      },
-      onChanged: onChanged,
-      maxLines: 3,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.labelText, style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Container(
+          height: 200,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: quill.QuillEditor.basic(
+            controller: _controller,
+            scrollController: ScrollController(),
+          ),
+        ),
+        quill.QuillSimpleToolbar(
+          configurations: const quill.QuillSimpleToolbarConfigurations(),
+          controller: _controller,
+        ),
+      ],
     );
   }
 }

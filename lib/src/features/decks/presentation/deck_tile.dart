@@ -1,4 +1,3 @@
-import 'package:flashcard_pet/src/common_widgets/empty_placeholder_widget.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/routing/app_router.dart';
 import 'package:flutter/material.dart';

@@ -42,6 +42,14 @@ class StudyFlashcardService {
     await flashcardsRepository.deleteFlashcardsById(ids);
   }
 
+  Future<void> deleteFlashcardsByDeckId(DeckID deckId) async {
+    final flashcards =
+        await ref.read(flashcardsByDeckFutureProvider(deckId).future);
+    final ids = flashcards.map((card) => card.id).toList();
+    await studyQueueRepository.deleteFlashcardsById(ids);
+    await flashcardsRepository.deleteFlashcardsById(ids);
+  }
+
   Future<Flashcard?> fetchFlashcardToStudy() async {
     final flashcardId = await ref.read(flashcardIdToStudyFutureProvider.future);
     if (flashcardId == null) {

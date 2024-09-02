@@ -11,6 +11,7 @@ abstract class FlashcardsRepository {
   Stream<Flashcard?> watchFlashcardById(FlashcardID flashcardId);
   Future<Flashcard?> fetchFlashcardById(FlashcardID flashcardId);
   Future<List<Flashcard>> fetchFlashcardsByDeck(DeckID deckId);
+
   Future<void> setFlashcard(Flashcard card);
   Future<void> setFlashcards(List<Flashcard> cards);
   Future<void> deleteFlashcardsById(List<FlashcardID> ids);

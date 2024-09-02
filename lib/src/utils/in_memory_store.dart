@@ -20,3 +20,4 @@ class InMemoryStore<T> {
   /// Don't forget to call this when done
   void close() => _subject.close();
 }
+

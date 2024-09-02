@@ -1,7 +1,7 @@
 import 'package:flashcard_pet/src/constants/dummy_data.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/study_queue_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
-import 'package:flashcard_pet/src/utils/delay.dart';
+import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
 import 'package:flutter/foundation.dart';
 

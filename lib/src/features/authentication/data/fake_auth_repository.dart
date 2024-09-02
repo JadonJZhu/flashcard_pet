@@ -1,7 +1,7 @@
 import 'package:flashcard_pet/src/exceptions/app_exception.dart';
 import 'package:flashcard_pet/src/features/authentication/domain/app_user.dart';
 import 'package:flashcard_pet/src/features/authentication/domain/fake_app_user.dart';
-import 'package:flashcard_pet/src/utils/delay.dart';
+import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

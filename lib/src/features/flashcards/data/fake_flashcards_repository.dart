@@ -2,7 +2,7 @@ import 'package:flashcard_pet/src/constants/dummy_data.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
-import 'package:flashcard_pet/src/utils/delay.dart';
+import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
 
 class FakeFlashcardsRepository implements FlashcardsRepository {
@@ -28,7 +28,7 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Future<Flashcard?> fetchFlashcardById(FlashcardID flashcardId) async {
-    delay(addDelay);
+    await delay(addDelay);
     return _flashcards.value[flashcardId];
   }
 
@@ -42,29 +42,35 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Future<void> setFlashcard(Flashcard card) async {
-    await delay(addDelay);
-    final flashcards = _flashcards.value;
-    flashcards[card.id] = card;
-    _flashcards.update(flashcards);
+    fakeAsyncMutationCallback(
+      inMemoryStore: _flashcards,
+      callback: (flashcards) {
+        flashcards[card.id] = card;
+      },
+    );
   }
 
   @override
   Future<void> setFlashcards(List<Flashcard> cards) async {
-    await delay(addDelay);
-    final flashcards = _flashcards.value;
-    for (final card in cards) {
-      flashcards[card.id] = card;
-    }
-    _flashcards.update(flashcards);
+    fakeAsyncMutationCallback(
+      inMemoryStore: _flashcards,
+      callback: (flashcards) {
+        for (final card in cards) {
+          flashcards[card.id] = card;
+        }
+      },
+    );
   }
 
   @override
   Future<void> deleteFlashcardsById(List<FlashcardID> ids) async {
-    await delay(addDelay);
-    final flashcards = _flashcards.value;
-    for (final id in ids) {
-      flashcards.remove(id);
-    }
-    _flashcards.update(flashcards);
+    fakeAsyncMutationCallback(
+      inMemoryStore: _flashcards,
+      callback: (flashcards) {
+        for (final id in ids) {
+          flashcards.remove(id);
+        }
+      },
+    );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flashcard_pet/src/constants/dummy_data.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flashcard_pet/src/utils/delay.dart';
+import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,10 +32,17 @@ class FakeDecksRepository {
   }
 
   Future<void> setDeck(Deck deck) async {
-    await delay(addDelay);
-    final decks = _decks.value;
-    decks[deck.id] = deck;
-    _decks.update(decks);
+    fakeAsyncMutationCallback(
+      inMemoryStore: _decks,
+      callback: (decks) => decks[deck.id] = deck,
+    );
+  }
+
+  Future<void> deleteDeckById(DeckID deckId) async {
+    fakeAsyncMutationCallback(
+      inMemoryStore: _decks,
+      callback: (decks) => decks.remove(deckId),
+    );
   }
 }
 

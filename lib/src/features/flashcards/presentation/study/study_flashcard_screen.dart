@@ -47,7 +47,7 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Text(
-                        isFlipped ? flashcard.back : flashcard.front,
+                        "template",//isFlipped ? flashcard.back : flashcard.front,
                         style: const TextStyle(fontSize: 24),
                         textAlign: TextAlign.center,
                       ),
