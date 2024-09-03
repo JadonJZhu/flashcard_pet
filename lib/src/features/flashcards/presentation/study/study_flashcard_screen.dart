@@ -1,5 +1,6 @@
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/common_widgets/empty_placeholder_widget.dart';
+import 'package:flashcard_pet/src/features/flashcards/presentation/study/quill_content_display.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/study_flashcard_controller.dart';
 import 'package:flashcard_pet/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,6 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     ref.listen(
       studyFlashcardControllerProvider,
       (_, state) => state.showAlertDialogOnError(context),
@@ -38,18 +38,25 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
         final flashcard = studyState.currentCard;
         if (flashcard != null) {
           final isFlipped = studyState.isFlipped;
+          final cardContent =
+              isFlipped ? flashcard.backContent : flashcard.frontContent;
+
           return Column(
             children: [
               Expanded(
                 child: Center(
-                  child: Card(
-                    elevation: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        "template",//isFlipped ? flashcard.back : flashcard.front,
-                        style: const TextStyle(fontSize: 24),
-                        textAlign: TextAlign.center,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 100,
+                      maxWidth: 800,
+                    ),
+                    child: Card(
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: IntrinsicWidth(
+                          child: QuillContentDisplay(document: cardContent),
+                        ),
                       ),
                     ),
                   ),
@@ -88,4 +95,3 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
     );
   }
 }
-

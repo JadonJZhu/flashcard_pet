@@ -109,13 +109,18 @@ class FlashcardSideField extends StatefulWidget {
 
 class _FlashcardSideFieldState extends State<FlashcardSideField> {
   late quill.QuillController _controller;
+  late final FocusNode _editorFocusNode;
+  late final ScrollController _editorScrollController;
 
   @override
   void initState() {
     super.initState();
+    _editorFocusNode = FocusNode();
+    _editorScrollController = ScrollController();
     _controller = quill.QuillController(
       document: widget.initialValue,
       selection: const TextSelection.collapsed(offset: 0),
+      editorFocusNode: _editorFocusNode,
     );
     _controller.addListener(_onTextChanged);
   }
@@ -126,8 +131,9 @@ class _FlashcardSideFieldState extends State<FlashcardSideField> {
 
   @override
   void dispose() {
-    _controller.removeListener(_onTextChanged);
     _controller.dispose();
+    _editorFocusNode.dispose();
+    _editorScrollController.dispose();
     super.dispose();
   }
 
@@ -146,7 +152,8 @@ class _FlashcardSideFieldState extends State<FlashcardSideField> {
           ),
           child: quill.QuillEditor.basic(
             controller: _controller,
-            scrollController: ScrollController(),
+            scrollController: _editorScrollController,
+            focusNode: _editorFocusNode,
           ),
         ),
         quill.QuillSimpleToolbar(

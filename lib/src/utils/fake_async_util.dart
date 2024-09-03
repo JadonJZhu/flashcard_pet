@@ -1,6 +1,6 @@
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
 
-Future<void> delay([bool addDelay = true, int milliseconds = 1000]) {
+Future<void> delay([bool addDelay = true, int milliseconds = 200]) {
   if (addDelay) {
     return Future.delayed(Duration(milliseconds: milliseconds));
   } else {
@@ -14,5 +14,5 @@ Future<void> fakeAsyncMutationCallback<T>(
   await delay();
   final value = inMemoryStore.value;
   callback(value);
-inMemoryStore.update(value);
+  inMemoryStore.update(value);
 }
