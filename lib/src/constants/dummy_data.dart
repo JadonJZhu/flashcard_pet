@@ -24,12 +24,13 @@ final Map<FlashcardID, Flashcard> kFlashcards = {
         {'bold': true},
       )
       ..insert('!\n')),
-    backContent: quill.Document.fromDelta(
-      quill_delta.Delta()
-        ..insert('Hello, ')
-        ..insert('world2', {quill.Attribute.bold.key: true})
-        ..insert('!\n'),
-    ),
+    backContent: quill.Document.fromDelta(quill_delta.Delta()
+      ..insert('Hello, ')
+      ..insert(
+        'world',
+        {'bold': true},
+      )
+      ..insert('!\n')),
   ),
   '2': Flashcard(
     id: '2',
@@ -38,4 +39,3 @@ final Map<FlashcardID, Flashcard> kFlashcards = {
     backContent: quill.Document(),
   ),
 };
-

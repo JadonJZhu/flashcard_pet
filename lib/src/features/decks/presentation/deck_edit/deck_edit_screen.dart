@@ -1,8 +1,13 @@
 import 'package:flashcard_pet/src/common_widgets/alert_dialogs.dart';
+import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
+import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
+import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flashcard_pet/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/constants/app_sizes.dart';
@@ -10,7 +15,7 @@ import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_form_fields.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_editor_controller.dart';
 
-class DeckEditScreen extends ConsumerWidget {
+class DeckEditScreen extends StatelessWidget {
   final DeckID? deckId;
 
   const DeckEditScreen({super.key, this.deckId});
@@ -22,34 +27,53 @@ class DeckEditScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(deckEditorControllerProvider(deckId));
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(deckId == null ? 'Create New Deck' : 'Edit Deck'),
       ),
-      body: AsyncValueWidget(
-        value: state,
-        data: (_) => SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(Sizes.p16),
-            child: DeckEditForm(
-              deckId: deckId,
-              exitScreen: () => routeToDecksScreen(context),
+      body: Consumer(
+        builder: (context, ref, child) {
+          final flashcardsValue = deckId != null
+              ? ref.watch(flashcardsByDeckFutureProvider(deckId!))
+              : const AsyncData<List<Flashcard>>([]);
+          final deckValue = deckId != null
+              ? ref.watch(deckByIdFutureProvider(deckId!))
+              : const AsyncData<Deck?>(null);
+
+          return AsyncValueWidget(
+            value: flashcardsValue,
+            data: (flashcards) => AsyncValueWidget(
+              value: deckValue,
+              data: (deck) => SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(Sizes.p16),
+                  child: DeckEditForm(
+                    deck: deck,
+                    flashcards: flashcards,
+                    exitScreen: () => routeToDecksScreen(context),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 }
 
 class DeckEditForm extends ConsumerStatefulWidget {
-  final DeckID? deckId;
-  final void Function()? exitScreen;
+  const DeckEditForm({
+    required this.flashcards,
+    super.key,
+    this.deck,
+    this.exitScreen,
+  });
 
-  const DeckEditForm({super.key, this.deckId, this.exitScreen});
+  final Deck? deck;
+  final List<Flashcard> flashcards;
+  final void Function()? exitScreen;
 
   @override
   ConsumerState<DeckEditForm> createState() => _DeckEditFormState();
@@ -58,79 +82,144 @@ class DeckEditForm extends ConsumerStatefulWidget {
 class _DeckEditFormState extends ConsumerState<DeckEditForm> {
   final _formKey = GlobalKey<FormState>();
 
+  late final TextEditingController titleController;
+  late final List<FlashcardState> flashcardStates;
+  final List<FlashcardID> deletedCardsIds = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    titleController = TextEditingController(text: widget.deck?.title);
+
+    if (widget.flashcards.isEmpty) {
+      flashcardStates = [FlashcardState.empty()];
+    } else {
+      flashcardStates = widget.flashcards
+          .map((flashcard) => FlashcardState.fromFlashcard(flashcard))
+          .toList();
+    }
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    for (final flashcardState in flashcardStates) {
+      flashcardState.frontController.dispose();
+      flashcardState.backController.dispose();
+    }
+    super.dispose();
+  }
+
+  bool _validateFlashcardsNotEmpty(List<FlashcardState> flashcardStates) {
+    for (final flashcardState in flashcardStates) {
+      if (flashcardState.frontController.document.isEmpty() ||
+          flashcardState.backController.document.isEmpty()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void onDeleteCard(int index, FlashcardState flashcardState) {
+    if (flashcardState.id != null) {
+      deletedCardsIds.add(flashcardState.id!);
+    }
+    flashcardState.frontController.dispose();
+    flashcardState.backController.dispose();
+
+    setState(
+      () => flashcardStates.removeAt(index),
+    );
+  }
+
+  Future<void> _saveDeck() async {
+    final deck = widget.deck ??
+        Deck(
+          id: const Uuid().v4(),
+          title: titleController.text,
+        );
+
+    final flashcards = flashcardStates.where((flashcardState) {
+      return flashcardState.isModified;
+    }).map((flashcardState) {
+      return Flashcard(
+        id: flashcardState.id ?? const Uuid().v4(),
+        deckId: deck.id,
+        frontContent: flashcardState.frontController.document,
+        backContent: flashcardState.backController.document,
+      );
+    }).toList();
+
+    await ref.read(deckEditorControllerProvider.notifier).saveDeck(
+        deck: deck,
+        cardsToUpdate: flashcards,
+        deletedCardsIds: deletedCardsIds);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(deckEditorControllerProvider(widget.deckId)).value!;
-
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TitleField(
-            initialValue: state.deck.title,
-            onChanged: ref
-                .read(deckEditorControllerProvider(widget.deckId).notifier)
-                .updateDeckTitle,
-          ),
+          TitleField(controller: titleController),
           gapH24,
           Text('Flashcards', style: Theme.of(context).textTheme.titleLarge),
           gapH16,
-          ...state.flashcards.asMap().entries.map(
+          ...flashcardStates.asMap().entries.map(
             (entry) {
               final index = entry.key;
-              final flashcard = entry.value;
+              final flashcardState = entry.value;
               return FlashcardField(
-                key: ValueKey(flashcard.id ?? index),
-                initialFront: flashcard.front,
-                initialBack: flashcard.back,
-                onChangedFront: (value) => ref
-                    .read(deckEditorControllerProvider(widget.deckId).notifier)
-                    .updateFlashcard(index, front: value),
-                onChangedBack: (value) => ref
-                    .read(deckEditorControllerProvider(widget.deckId).notifier)
-                    .updateFlashcard(index, back: value),
-                onDelete: () => ref
-                    .read(deckEditorControllerProvider(widget.deckId).notifier)
-                    .deleteFlashcard(index),
-                index: index + 1,
+                index: index,
+                flashcardState: flashcardState,
+                onDelete: () {
+                  onDeleteCard(index, flashcardState);
+                },
               );
             },
           ),
           gapH16,
           ElevatedButton(
-            onPressed: ref
-                .read(deckEditorControllerProvider(widget.deckId).notifier)
-                .addFlashcard,
+            onPressed: () => setState(
+              () => flashcardStates.add(FlashcardState.empty()),
+            ),
             child: const Text('Add Flashcard'),
           ),
           gapH24,
           ElevatedButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                await ref
-                    .read(deckEditorControllerProvider(widget.deckId).notifier)
-                    .saveDeck();
+                if (_validateFlashcardsNotEmpty(flashcardStates) == false) {
+                  await showAlertDialog(
+                    context: context,
+                    title: "Please make sure no flashcard fields are empty.",
+                  );
+                  return;
+                }
+
+                await _saveDeck();
+
                 widget.exitScreen?.call();
               }
             },
-            child: Text(widget.deckId == null ? 'Create Deck' : 'Update Deck'),
+            child: Text(widget.deck == null ? 'Create Deck' : 'Update Deck'),
           ),
-          if (widget.deckId != null) ...[
+          if (widget.deck != null) ...[
             const SizedBox(height: Sizes.p16),
             ElevatedButton(
               onPressed: () async {
                 final confirmed = await showAlertDialog(
-                  context: context,
-                  title: "Are you sure you want to delete this deck?",
-                  cancelActionText: "No",
-                  defaultActionText: "Yes"
-                );
+                    context: context,
+                    title: "Are you sure you want to delete this deck?",
+                    cancelActionText: "No",
+                    defaultActionText: "Yes");
                 if (confirmed == true) {
                   await ref
-                      .read(
-                          deckEditorControllerProvider(widget.deckId).notifier)
-                      .deleteDeck();
+                      .read(deckEditorControllerProvider.notifier)
+                      .deleteDeck(widget.deck!.id);
                   widget.exitScreen?.call();
                 }
               },
@@ -144,4 +233,65 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
       ),
     );
   }
+}
+
+class FlashcardState {
+  FlashcardState({
+    this.id,
+    required this.frontController,
+    required this.backController,
+    required this.initialFront,
+    required this.initialBack,
+  });
+
+  final String? id;
+  final QuillController frontController;
+  final Document initialFront;
+  final Document initialBack;
+  late final QuillController backController;
+
+  factory FlashcardState.empty() => FlashcardState(
+        frontController: QuillController.basic(),
+        backController: QuillController.basic(),
+        initialFront: Document(),
+        initialBack: Document(),
+      );
+
+  factory FlashcardState.fromFlashcard(Flashcard flashcard) => FlashcardState(
+        id: flashcard.id,
+        frontController: QuillController(
+          document: Document.fromDelta(
+              flashcard.frontContent.toDelta()), // ensure deep-copy
+          selection: const TextSelection.collapsed(offset: 0),
+        ),
+        backController: QuillController(
+          document: Document.fromDelta(
+              flashcard.backContent.toDelta()), // ensure deep-copy
+          selection: const TextSelection.collapsed(offset: 0),
+        ),
+        initialFront: flashcard.frontContent,
+        initialBack: flashcard.backContent,
+      );
+
+  FlashcardState copyWith({
+    String? id,
+    QuillController? frontController,
+    QuillController? backController,
+    Document? initialFront,
+    Document? initialBack,
+  }) {
+    return FlashcardState(
+      id: id ?? this.id,
+      frontController: frontController ?? this.frontController,
+      backController: backController ?? this.backController,
+      initialFront: initialFront ?? this.initialFront,
+      initialBack: initialBack ?? this.initialBack,
+    );
+  }
+}
+
+extension FlashcardStateX on FlashcardState {
+  bool get isModified =>
+      initialFront.toDelta() != frontController.document.toDelta() ||
+      initialBack.toDelta() != backController.document.toDelta();
 }

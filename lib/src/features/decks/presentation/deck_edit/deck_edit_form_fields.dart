@@ -1,23 +1,22 @@
 import 'package:flashcard_pet/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:flashcard_pet/src/constants/app_sizes.dart';
 import 'package:flashcard_pet/src/constants/breakpoints.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class TitleField extends StatelessWidget {
-  final String initialValue;
-  final ValueChanged<String> onChanged;
-
   const TitleField({
     super.key,
-    required this.initialValue,
-    required this.onChanged,
+    required this.controller,
   });
+
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: initialValue,
+      controller: controller,
       decoration: const InputDecoration(
         labelText: 'Deck Title',
         border: OutlineInputBorder(),
@@ -30,28 +29,21 @@ class TitleField extends StatelessWidget {
         }
         return null;
       },
-      onChanged: onChanged,
     );
   }
 }
 
 class FlashcardField extends StatelessWidget {
-  final quill.Document initialFront;
-  final quill.Document initialBack;
-  final ValueChanged<quill.Document> onChangedFront;
-  final ValueChanged<quill.Document> onChangedBack;
-  final VoidCallback onDelete;
-  final int index;
-
   const FlashcardField({
     super.key,
-    required this.initialFront,
-    required this.initialBack,
-    required this.onChangedFront,
-    required this.onChangedBack,
-    required this.onDelete,
     required this.index,
+    required this.flashcardState,
+    this.onDelete,
   });
+
+  final int index;
+  final FlashcardState flashcardState;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -62,20 +54,20 @@ class FlashcardField extends StatelessWidget {
         children: [
           CircleAvatar(
             foregroundColor: Colors.black,
-            child: Text('$index'),
+            child: Text('${index + 1}'),
           ),
           gapW8,
           Expanded(
             child: ResponsiveTwoColumnLayout(
               startContent: FlashcardSideField(
-                initialValue: initialFront,
+                key: UniqueKey(),
+                controller: flashcardState.frontController,
                 labelText: 'Front',
-                onChanged: onChangedFront,
               ),
               endContent: FlashcardSideField(
-                initialValue: initialBack,
+                key: UniqueKey(),
+                controller: flashcardState.backController,
                 labelText: 'Back',
-                onChanged: onChangedBack,
               ),
               spacing: 16,
               breakpoint: Breakpoint.tablet,
@@ -92,15 +84,13 @@ class FlashcardField extends StatelessWidget {
 }
 
 class FlashcardSideField extends StatefulWidget {
-  final quill.Document initialValue;
+  final quill.QuillController controller;
   final String labelText;
-  final ValueChanged<quill.Document> onChanged;
 
   const FlashcardSideField({
     super.key,
-    required this.initialValue,
+    required this.controller,
     required this.labelText,
-    required this.onChanged,
   });
 
   @override
@@ -108,7 +98,6 @@ class FlashcardSideField extends StatefulWidget {
 }
 
 class _FlashcardSideFieldState extends State<FlashcardSideField> {
-  late quill.QuillController _controller;
   late final FocusNode _editorFocusNode;
   late final ScrollController _editorScrollController;
 
@@ -117,21 +106,11 @@ class _FlashcardSideFieldState extends State<FlashcardSideField> {
     super.initState();
     _editorFocusNode = FocusNode();
     _editorScrollController = ScrollController();
-    _controller = quill.QuillController(
-      document: widget.initialValue,
-      selection: const TextSelection.collapsed(offset: 0),
-      editorFocusNode: _editorFocusNode,
-    );
-    _controller.addListener(_onTextChanged);
-  }
-
-  void _onTextChanged() {
-    widget.onChanged(_controller.document);
+    widget.controller.editorFocusNode = _editorFocusNode;
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     _editorFocusNode.dispose();
     _editorScrollController.dispose();
     super.dispose();
@@ -151,14 +130,14 @@ class _FlashcardSideFieldState extends State<FlashcardSideField> {
             borderRadius: BorderRadius.circular(4),
           ),
           child: quill.QuillEditor.basic(
-            controller: _controller,
+            controller: widget.controller,
             scrollController: _editorScrollController,
             focusNode: _editorFocusNode,
           ),
         ),
         quill.QuillSimpleToolbar(
           configurations: const quill.QuillSimpleToolbarConfigurations(),
-          controller: _controller,
+          controller: widget.controller,
         ),
       ],
     );

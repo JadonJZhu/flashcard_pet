@@ -47,7 +47,6 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
                 child: Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(
-                      minWidth: 100,
                       maxWidth: 800,
                     ),
                     child: Card(

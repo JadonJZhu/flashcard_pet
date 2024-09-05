@@ -62,3 +62,9 @@ Future<List<Deck>> decksListFuture(DecksListFutureRef ref) {
   final decksRepository = ref.watch(decksRepositoryProvider);
   return decksRepository.fetchDecks();
 }
+
+@riverpod
+Future<Deck?> deckByIdFuture(DeckByIdFutureRef ref, DeckID deckId) {
+  final decksRepository = ref.watch(decksRepositoryProvider);
+  return decksRepository.fetchDeckById(deckId);
+}
