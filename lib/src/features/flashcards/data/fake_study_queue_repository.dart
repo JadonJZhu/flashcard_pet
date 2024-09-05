@@ -3,7 +3,6 @@ import 'package:flashcard_pet/src/features/flashcards/data/study_queue_repositor
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
-import 'package:flutter/foundation.dart';
 
 class FakeStudyQueueRepository implements StudyQueueRepository {
   FakeStudyQueueRepository({this.addDelay = true});

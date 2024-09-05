@@ -99,47 +99,64 @@ class FlashcardSideField extends StatefulWidget {
 
 class _FlashcardSideFieldState extends State<FlashcardSideField> {
   late final FocusNode _editorFocusNode;
+  late final FocusScopeNode _focusScopeNode;
   late final ScrollController _editorScrollController;
+  bool _isEditorFocused = false;
 
   @override
   void initState() {
     super.initState();
     _editorFocusNode = FocusNode();
+    _focusScopeNode = FocusScopeNode();
+    _focusScopeNode.addListener(_onFocusChange);
     _editorScrollController = ScrollController();
     widget.controller.editorFocusNode = _editorFocusNode;
   }
 
   @override
   void dispose() {
+    _focusScopeNode.removeListener(_onFocusChange);
+    _focusScopeNode.dispose();
     _editorFocusNode.dispose();
     _editorScrollController.dispose();
     super.dispose();
   }
 
+  void _onFocusChange() {
+    setState(() {
+      _isEditorFocused = _focusScopeNode.hasFocus;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(widget.labelText, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        Container(
-          height: 200,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(4),
+    return FocusScope(
+      node: _focusScopeNode,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.labelText,
+              style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: quill.QuillEditor.basic(
+              controller: widget.controller,
+              scrollController: _editorScrollController,
+              focusNode: _editorFocusNode,
+            ),
           ),
-          child: quill.QuillEditor.basic(
-            controller: widget.controller,
-            scrollController: _editorScrollController,
-            focusNode: _editorFocusNode,
-          ),
-        ),
-        quill.QuillSimpleToolbar(
-          configurations: const quill.QuillSimpleToolbarConfigurations(),
-          controller: widget.controller,
-        ),
-      ],
+          if (_isEditorFocused)
+            quill.QuillSimpleToolbar(
+              configurations: const quill.QuillSimpleToolbarConfigurations(),
+              controller: widget.controller,
+            ),
+        ],
+      ),
     );
   }
 }

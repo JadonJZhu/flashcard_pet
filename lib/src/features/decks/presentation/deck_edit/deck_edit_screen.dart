@@ -12,7 +12,7 @@ import 'package:uuid/uuid.dart';
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/constants/app_sizes.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_form_fields.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_input_fields.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_editor_controller.dart';
 
 class DeckEditScreen extends StatelessWidget {
