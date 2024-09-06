@@ -22,7 +22,7 @@ final decksRepositoryProvider =
 );
 
 typedef DecksRepositoryRef = AutoDisposeProviderRef<FakeDecksRepository>;
-String _$decksListStreamHash() => r'48ed70e45c9a1e1553162969e3bb08592803c083';
+String _$decksListStreamHash() => r'2fc21b3d749368d61f4755debea61f776c7a5219';
 
 /// See also [decksListStream].
 @ProviderFor(decksListStream)
@@ -37,7 +37,7 @@ final decksListStreamProvider = AutoDisposeStreamProvider<List<Deck>>.internal(
 );
 
 typedef DecksListStreamRef = AutoDisposeStreamProviderRef<List<Deck>>;
-String _$decksListFutureHash() => r'51bf066478d6efb70a60179e1471ab393c93c8aa';
+String _$decksListFutureHash() => r'b7de7d11f7275ab82b080ba0d288325a326ee4cf';
 
 /// See also [decksListFuture].
 @ProviderFor(decksListFuture)

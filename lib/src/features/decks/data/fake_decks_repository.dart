@@ -2,6 +2,7 @@ import 'package:flashcard_pet/src/constants/dummy_data.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fake_decks_repository.g.dart';
@@ -13,34 +14,35 @@ class FakeDecksRepository {
 
   final bool addDelay;
 
-  final _decks = InMemoryStore<Map<DeckID, Deck>>(Map.of(kDecks));
+  final _decksStore = InMemoryStore<Map<DeckID, Deck>>(Map.of(kDummyDecksMap));
+  Map<DeckID, Deck> get decksValue => _decksStore.value;
 
-  Stream<List<Deck>> watchDecks() {
-    return _decks.stream.map(
+  Stream<List<Deck>> watchDecksList() {
+    return _decksStore.stream.map(
       (deckMap) => deckMap.values.toList(),
     );
   }
 
-  Future<List<Deck>> fetchDecks() async {
+  Future<List<Deck>> fetchDecksList() async {
     await delay(addDelay);
-    return _decks.value.values.toList();
+    return _decksStore.value.values.toList();
   }
 
   Future<Deck?> fetchDeckById(DeckID deckId) async {
     await delay(addDelay);
-    return _decks.value[deckId];
+    return _decksStore.value[deckId];
   }
 
   Future<void> setDeck(Deck deck) async {
     fakeAsyncMutationCallback(
-      inMemoryStore: _decks,
+      inMemoryStore: _decksStore,
       callback: (decks) => decks[deck.id] = deck,
     );
   }
 
   Future<void> deleteDeckById(DeckID deckId) async {
     fakeAsyncMutationCallback(
-      inMemoryStore: _decks,
+      inMemoryStore: _decksStore,
       callback: (decks) => decks.remove(deckId),
     );
   }
@@ -54,13 +56,13 @@ FakeDecksRepository decksRepository(DecksRepositoryRef ref) {
 @riverpod
 Stream<List<Deck>> decksListStream(DecksListStreamRef ref) {
   final decksRepository = ref.watch(decksRepositoryProvider);
-  return decksRepository.watchDecks();
+  return decksRepository.watchDecksList();
 }
 
 @riverpod
 Future<List<Deck>> decksListFuture(DecksListFutureRef ref) {
   final decksRepository = ref.watch(decksRepositoryProvider);
-  return decksRepository.fetchDecks();
+  return decksRepository.fetchDecksList();
 }
 
 @riverpod

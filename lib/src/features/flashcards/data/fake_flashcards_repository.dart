@@ -11,7 +11,7 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   /// Preload with the default list of flashcards when the app starts
   final _flashcards =
-      InMemoryStore<Map<FlashcardID, Flashcard>>(Map.of(kFlashcards));
+      InMemoryStore<Map<FlashcardID, Flashcard>>(Map.of(kDummyFlashcardsMap));
 
   @override
   Stream<List<Flashcard>> watchFlashcards() {

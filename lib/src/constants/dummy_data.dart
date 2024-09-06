@@ -6,14 +6,14 @@ import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_quill/quill_delta.dart' as quill_delta;
 
-const Map<DeckID, Deck> kDecks = {
+const Map<DeckID, Deck> kDummyDecksMap = {
   '1': Deck(
     id: '1',
     title: "Deck 1",
   ),
 };
 
-final Map<FlashcardID, Flashcard> kFlashcards = {
+final Map<FlashcardID, Flashcard> kDummyFlashcardsMap = {
   '1': Flashcard(
     id: '1',
     deckId: '1',
@@ -27,7 +27,7 @@ final Map<FlashcardID, Flashcard> kFlashcards = {
     backContent: quill.Document.fromDelta(quill_delta.Delta()
       ..insert('Hello, ')
       ..insert(
-        'world',
+        'world2!!!',
         {'bold': true},
       )
       ..insert('!\n')),

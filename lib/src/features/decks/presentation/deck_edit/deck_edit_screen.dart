@@ -1,4 +1,5 @@
 import 'package:flashcard_pet/src/common_widgets/alert_dialogs.dart';
+import 'package:flashcard_pet/src/common_widgets/primary_button.dart';
 import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
@@ -48,10 +49,12 @@ class DeckEditScreen extends StatelessWidget {
               data: (deck) => SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(Sizes.p16),
-                  child: DeckEditForm(
-                    deck: deck,
-                    flashcards: flashcards,
-                    exitScreen: () => routeToDecksScreen(context),
+                  child: Center(
+                    child: DeckEditForm(
+                      deck: deck,
+                      flashcards: flashcards,
+                      exitScreen: () => routeToDecksScreen(context),
+                    ),
                   ),
                 ),
               ),
@@ -159,77 +162,79 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TitleField(controller: titleController),
-          gapH24,
-          Text('Flashcards', style: Theme.of(context).textTheme.titleLarge),
-          gapH16,
-          ...flashcardStates.asMap().entries.map(
-            (entry) {
-              final index = entry.key;
-              final flashcardState = entry.value;
-              return FlashcardField(
-                index: index,
-                flashcardState: flashcardState,
-                onDelete: () {
-                  onDeleteCard(index, flashcardState);
-                },
-              );
-            },
-          ),
-          gapH16,
-          ElevatedButton(
-            onPressed: () => setState(
-              () => flashcardStates.add(FlashcardState.empty()),
+    final state = ref.watch(deckEditorControllerProvider);
+
+    return AsyncValueWidget(
+      value: state,
+      data: (_) => Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TitleField(controller: titleController),
+            gapH24,
+            Text('Flashcards', style: Theme.of(context).textTheme.titleLarge),
+            gapH16,
+            ...flashcardStates.asMap().entries.map(
+              (entry) {
+                final index = entry.key;
+                final flashcardState = entry.value;
+                return FlashcardField(
+                  index: index,
+                  flashcardState: flashcardState,
+                  onDelete: () {
+                    onDeleteCard(index, flashcardState);
+                  },
+                );
+              },
             ),
-            child: const Text('Add Flashcard'),
-          ),
-          gapH24,
-          ElevatedButton(
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                if (_validateFlashcardsNotEmpty(flashcardStates) == false) {
-                  await showAlertDialog(
-                    context: context,
-                    title: "Please make sure no flashcard fields are empty.",
-                  );
-                  return;
-                }
-
-                await _saveDeck();
-
-                widget.exitScreen?.call();
-              }
-            },
-            child: Text(widget.deck == null ? 'Create Deck' : 'Update Deck'),
-          ),
-          if (widget.deck != null) ...[
-            const SizedBox(height: Sizes.p16),
+            gapH16,
             ElevatedButton(
+              onPressed: () => setState(
+                () => flashcardStates.add(FlashcardState.empty()),
+              ),
+              child: const Text('Add Flashcard'),
+            ),
+            gapH24,
+            PrimaryButton(
               onPressed: () async {
-                final confirmed = await showAlertDialog(
-                    context: context,
-                    title: "Are you sure you want to delete this deck?",
-                    cancelActionText: "No",
-                    defaultActionText: "Yes");
-                if (confirmed == true) {
-                  await ref
-                      .read(deckEditorControllerProvider.notifier)
-                      .deleteDeck(widget.deck!.id);
+                if (_formKey.currentState!.validate()) {
+                  if (_validateFlashcardsNotEmpty(flashcardStates) == false) {
+                    await showAlertDialog(
+                      context: context,
+                      title: "Please make sure no flashcard fields are empty.",
+                    );
+                    return;
+                  }
+
+                  await _saveDeck();
+
                   widget.exitScreen?.call();
                 }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Delete Deck'),
+              text: widget.deck == null ? 'Create Deck' : 'Update Deck',
             ),
+            if (widget.deck != null) ...[
+              const SizedBox(height: Sizes.p16),
+              PrimaryButton(
+                onPressed: () async {
+                  final confirmed = await showAlertDialog(
+                      context: context,
+                      title: "Are you sure you want to delete this deck?",
+                      cancelActionText: "No",
+                      defaultActionText: "Yes");
+                  if (confirmed == true) {
+                    await ref
+                        .read(deckEditorControllerProvider.notifier)
+                        .deleteDeck(widget.deck!.id);
+                    widget.exitScreen?.call();
+                  }
+                },
+                text: 'Delete Deck',
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -20,6 +20,7 @@ class DeckEditorController extends _$DeckEditorController {
     required List<Flashcard> cardsToUpdate,
     required List<FlashcardID> deletedCardsIds,
   }) async {
+    
     state = const AsyncLoading();
 
     try {

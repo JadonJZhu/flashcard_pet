@@ -10,7 +10,7 @@ class FakeStudyQueueRepository implements StudyQueueRepository {
   final bool addDelay;
 
   final _studyQueue = InMemoryStore<List<FlashcardID>>(
-    kFlashcards.values.map((flashcard) => flashcard.id).toList(),
+    kDummyFlashcardsMap.values.map((flashcard) => flashcard.id).toList(),
   );
 
   final _reviewQueue = InMemoryStore<List<FlashcardID>>([]);
