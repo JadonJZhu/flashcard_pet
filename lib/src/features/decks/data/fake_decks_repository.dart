@@ -2,7 +2,6 @@ import 'package:flashcard_pet/src/constants/dummy_data.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fake_decks_repository.g.dart';
@@ -18,9 +17,9 @@ class FakeDecksRepository {
   Map<DeckID, Deck> get decksValue => _decksStore.value;
 
   Stream<List<Deck>> watchDecksList() {
-    return _decksStore.stream.map(
-      (deckMap) => deckMap.values.toList(),
-    );
+    return _decksStore.stream.map((deckMap) {
+      return deckMap.values.toList();
+    });
   }
 
   Future<List<Deck>> fetchDecksList() async {
@@ -34,14 +33,15 @@ class FakeDecksRepository {
   }
 
   Future<void> setDeck(Deck deck) async {
-    fakeAsyncMutationCallback(
-      inMemoryStore: _decksStore,
-      callback: (decks) => decks[deck.id] = deck,
-    );
+    await fakeAsyncMutationCallback(
+        inMemoryStore: _decksStore,
+        callback: (decks) {
+          decks[deck.id] = deck;
+        });
   }
 
   Future<void> deleteDeckById(DeckID deckId) async {
-    fakeAsyncMutationCallback(
+    await fakeAsyncMutationCallback(
       inMemoryStore: _decksStore,
       callback: (decks) => decks.remove(deckId),
     );

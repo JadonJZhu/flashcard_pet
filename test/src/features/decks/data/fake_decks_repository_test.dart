@@ -1,7 +1,6 @@
 import 'package:flashcard_pet/src/constants/dummy_data.dart';
 import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -30,19 +29,35 @@ void main() {
       expect(await decksRepository.fetchDeckById('1'), kDummyDecksMap['1']);
     });
 
-    test('setDeck', () async {
+    test(
+      'setDeck',
+      () async {
+        // set up
+        final decksRepository = makeDecksRepository();
+        const testDeck = Deck(id: '2', title: 'haha');
+
+        // run
+        await decksRepository.setDeck(testDeck);
+
+        // verify
+        final decks = Map.of(kDummyDecksMap);
+        decks[testDeck.id] = testDeck;
+        expect(decksRepository.decksValue, decks);
+      },
+    );
+
+    test('delete deck by id', () async {
       // set up
       final decksRepository = makeDecksRepository();
-      const testDeck = Deck(id: '2', title: 'haha');
+      expect(await decksRepository.fetchDeckById('1'), kDummyDecksMap['1']);
 
       // run
-      await decksRepository.setDeck(testDeck);
+      await decksRepository.deleteDeckById('1');
 
       // verify
-      // final decks = Map.of(kDummyDecksMap);
-      // decks[testDeck.id] = testDeck;
-      debugPrint(decksRepository.decksValue.toString());
-      // expect(decksRepository.decksValue, decks);
+      final decks = Map.of(kDummyDecksMap);
+      decks.remove('1');
+      expect(decksRepository.decksValue, decks);
     });
   });
 }

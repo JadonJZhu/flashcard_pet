@@ -42,7 +42,7 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Future<void> setFlashcard(Flashcard card) async {
-    fakeAsyncMutationCallback(
+    await fakeAsyncMutationCallback(
       inMemoryStore: _flashcards,
       callback: (flashcards) {
         flashcards[card.id] = card;
@@ -52,7 +52,7 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Future<void> setFlashcards(List<Flashcard> cards) async {
-    fakeAsyncMutationCallback(
+    await fakeAsyncMutationCallback(
       inMemoryStore: _flashcards,
       callback: (flashcards) {
         for (final card in cards) {
@@ -64,7 +64,7 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Future<void> deleteFlashcardsById(List<FlashcardID> ids) async {
-    fakeAsyncMutationCallback(
+    await fakeAsyncMutationCallback(
       inMemoryStore: _flashcards,
       callback: (flashcards) {
         for (final id in ids) {
