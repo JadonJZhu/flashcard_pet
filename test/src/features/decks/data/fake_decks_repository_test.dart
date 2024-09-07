@@ -3,6 +3,8 @@ import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// This is an incomplete test for the FakeDecksRepository completed as practice.
+
 void main() {
   FakeDecksRepository makeDecksRepository() => FakeDecksRepository(
         addDelay: false,
@@ -46,7 +48,7 @@ void main() {
       },
     );
 
-    test('delete deck by id', () async {
+    test('delete deck by valid id', () async {
       // set up
       final decksRepository = makeDecksRepository();
       expect(await decksRepository.fetchDeckById('1'), kDummyDecksMap['1']);

@@ -1,4 +1,3 @@
-
 import 'package:flashcard_pet/src/app_bootstrap.dart';
 import 'package:flashcard_pet/src/app_bootstrap_fakes.dart';
 import 'package:flashcard_pet/src/exceptions/error_logger.dart';
