@@ -31,11 +31,13 @@ final Map<FlashcardID, Flashcard> kDummyFlashcardsMap = {
         {'bold': true},
       )
       ..insert('!\n')),
+      nextDueDate: DateTime.now(),
   ),
   '2': Flashcard(
     id: '2',
     deckId: '1',
     frontContent: quill.Document(),
     backContent: quill.Document(),
+    nextDueDate: DateTime.now(),
   ),
 };

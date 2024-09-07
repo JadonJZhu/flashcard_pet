@@ -1,7 +1,7 @@
 import 'package:flashcard_pet/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:flashcard_pet/src/constants/app_sizes.dart';
 import 'package:flashcard_pet/src/constants/breakpoints.dart';
-import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_screen.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/flashcard_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 

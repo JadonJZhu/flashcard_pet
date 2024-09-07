@@ -1,6 +1,7 @@
 import 'package:flashcard_pet/src/common_widgets/alert_dialogs.dart';
 import 'package:flashcard_pet/src/common_widgets/primary_button.dart';
 import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/flashcard_state.dart';
 import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flashcard_pet/src/routing/app_router.dart';
@@ -125,8 +126,8 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
   }
 
   void onDeleteCard(int index, FlashcardState flashcardState) {
-    if (flashcardState.id != null) {
-      deletedCardsIds.add(flashcardState.id!);
+    if (flashcardState.originalFlashcard != null) {
+      deletedCardsIds.add(flashcardState.originalFlashcard!.id);
     }
     flashcardState.frontController.dispose();
     flashcardState.backController.dispose();
@@ -147,10 +148,11 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
       return flashcardState.isModified;
     }).map((flashcardState) {
       return Flashcard(
-        id: flashcardState.id ?? const Uuid().v4(),
+        id: flashcardState.originalFlashcard?.id ?? const Uuid().v4(),
         deckId: deck.id,
         frontContent: flashcardState.frontController.document,
         backContent: flashcardState.backController.document,
+        nextDueDate: flashcardState.originalFlashcard?.nextDueDate ?? DateTime.now(),
       );
     }).toList();
 
@@ -238,65 +240,4 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
       ),
     );
   }
-}
-
-class FlashcardState {
-  FlashcardState({
-    this.id,
-    required this.frontController,
-    required this.backController,
-    required this.initialFront,
-    required this.initialBack,
-  });
-
-  final String? id;
-  final QuillController frontController;
-  final Document initialFront;
-  final Document initialBack;
-  late final QuillController backController;
-
-  factory FlashcardState.empty() => FlashcardState(
-        frontController: QuillController.basic(),
-        backController: QuillController.basic(),
-        initialFront: Document(),
-        initialBack: Document(),
-      );
-
-  factory FlashcardState.fromFlashcard(Flashcard flashcard) => FlashcardState(
-        id: flashcard.id,
-        frontController: QuillController(
-          document: Document.fromDelta(
-              flashcard.frontContent.toDelta()), // ensure deep-copy
-          selection: const TextSelection.collapsed(offset: 0),
-        ),
-        backController: QuillController(
-          document: Document.fromDelta(
-              flashcard.backContent.toDelta()), // ensure deep-copy
-          selection: const TextSelection.collapsed(offset: 0),
-        ),
-        initialFront: flashcard.frontContent,
-        initialBack: flashcard.backContent,
-      );
-
-  FlashcardState copyWith({
-    String? id,
-    QuillController? frontController,
-    QuillController? backController,
-    Document? initialFront,
-    Document? initialBack,
-  }) {
-    return FlashcardState(
-      id: id ?? this.id,
-      frontController: frontController ?? this.frontController,
-      backController: backController ?? this.backController,
-      initialFront: initialFront ?? this.initialFront,
-      initialBack: initialBack ?? this.initialBack,
-    );
-  }
-}
-
-extension FlashcardStateX on FlashcardState {
-  bool get isModified =>
-      initialFront.toDelta() != frontController.document.toDelta() ||
-      initialBack.toDelta() != backController.document.toDelta();
 }
