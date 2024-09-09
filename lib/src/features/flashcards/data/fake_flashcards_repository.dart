@@ -4,6 +4,7 @@ import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:flashcard_pet/src/utils/fake_async_util.dart';
 import 'package:flashcard_pet/src/utils/in_memory_store.dart';
+import 'package:rxdart/rxdart.dart';
 
 class FakeFlashcardsRepository implements FlashcardsRepository {
   FakeFlashcardsRepository({this.addDelay = true});
@@ -42,9 +43,19 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Stream<List<Flashcard>> watchDueFlashcards() {
-    return _flashcards.stream.map((flashcardsMap) => flashcardsMap.values
-        .where((flashcard) => flashcard.nextDueDate.isBefore(DateTime.now()))
-        .toList());
+     final hourlyTicker = Stream.periodic(const Duration(hours: 1));
+
+    // Combine the flashcards stream with the hourly ticker
+    return Rx.combineLatest2(
+      _flashcards.stream,
+      hourlyTicker,
+      (Map<String, Flashcard> flashcardsMap, _) {
+        final now = DateTime.now();
+        return flashcardsMap.values
+            .where((flashcard) => flashcard.nextDueDate.isBefore(now))
+            .toList();
+      },
+    );
   }
 
   @override
