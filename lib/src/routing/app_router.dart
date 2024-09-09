@@ -1,7 +1,7 @@
 import 'package:flashcard_pet/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/decks_list_screen.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_screen.dart';
-import 'package:flashcard_pet/src/features/flashcards/presentation/study/study_flashcard_screen.dart';
+import 'package:flashcard_pet/src/features/flashcards/presentation/study/flashcard_study_screen.dart';
 import 'package:flashcard_pet/src/routing/go_router_refresh_stream.dart';
 import 'package:flashcard_pet/src/routing/ui/scaffold_with_nested_navigation.dart';
 import 'package:flashcard_pet/src/routing/not_found_screen.dart';
@@ -101,7 +101,7 @@ GoRouter goRouter(GoRouterRef ref) {
                 name: AppRoute.study.name,
                 pageBuilder: (context, state) {
                   return const NoTransitionPage(
-                    child: StudyFlashcardScreen(),
+                    child: FlashcardStudyScreen(),
                   );
                 },
               ),

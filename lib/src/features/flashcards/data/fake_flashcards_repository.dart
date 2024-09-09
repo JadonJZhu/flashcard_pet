@@ -43,14 +43,15 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
 
   @override
   Stream<List<Flashcard>> watchDueFlashcards() {
-     final hourlyTicker = Stream.periodic(const Duration(hours: 1));
+    final hourlyTicker =
+        Stream.periodic(const Duration(hours: 1), (_) => DateTime.now())
+            .startWith(DateTime.now());
 
     // Combine the flashcards stream with the hourly ticker
     return Rx.combineLatest2(
       _flashcards.stream,
       hourlyTicker,
-      (Map<String, Flashcard> flashcardsMap, _) {
-        final now = DateTime.now();
+      (flashcardsMap, now) {
         return flashcardsMap.values
             .where((flashcard) => flashcard.nextDueDate.isBefore(now))
             .toList();

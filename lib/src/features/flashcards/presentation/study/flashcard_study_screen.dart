@@ -2,13 +2,13 @@ import 'package:flashcard_pet/src/common_widgets/alert_dialogs.dart';
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/common_widgets/empty_placeholder_widget.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/quill_content_display.dart';
-import 'package:flashcard_pet/src/features/flashcards/presentation/study/study_flashcard_controller.dart';
+import 'package:flashcard_pet/src/features/flashcards/presentation/study/flashcard_study_controller.dart';
 import 'package:flashcard_pet/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StudyFlashcardScreen extends StatelessWidget {
-  const StudyFlashcardScreen({super.key});
+class FlashcardStudyScreen extends StatelessWidget {
+  const FlashcardStudyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,22 +16,22 @@ class StudyFlashcardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Study Flashcard Screen"),
       ),
-      body: const StudyFlashcardScreenContents(),
+      body: const FlashcardStudyScreenContents(),
     );
   }
 }
 
-class StudyFlashcardScreenContents extends ConsumerWidget {
-  const StudyFlashcardScreenContents({super.key});
+class FlashcardStudyScreenContents extends ConsumerWidget {
+  const FlashcardStudyScreenContents({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(
-      studyFlashcardControllerProvider,
+      flashcardStudyControllerProvider,
       (_, state) => state.showAlertDialogOnError(context),
     );
 
-    final studyStateValue = ref.watch(studyFlashcardControllerProvider);
+    final studyStateValue = ref.watch(flashcardStudyControllerProvider);
 
     return AsyncValueWidget(
       value: studyStateValue,
@@ -70,7 +70,7 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
                     Text("Cards left: ${studyState.remainingCount}"),
                     ElevatedButton(
                       onPressed: () => ref
-                          .read(studyFlashcardControllerProvider.notifier)
+                          .read(flashcardStudyControllerProvider.notifier)
                           .flipCard(),
                       child: Text(isFlipped ? 'Flip' : 'Flip'),
                     ),

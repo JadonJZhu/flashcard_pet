@@ -2,20 +2,15 @@ import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'study_flashcard_controller.g.dart';
+part 'flashcard_study_controller.g.dart';
 
 @riverpod
-class StudyFlashcardController extends _$StudyFlashcardController {
+class FlashcardStudyController extends _$FlashcardStudyController {
   @override
-  Future<StudyFlashcardState> build() {
-
-    return _loadStudyInfo();
-  }
-
-  Future<StudyFlashcardState> _loadStudyInfo() async {
+  Future<FlashcardStudyState> build() async {
     final flashcards = await ref.watch(dueFlashcardsStreamProvider.future);
 
-    return StudyFlashcardState(
+    return FlashcardStudyState(
       currentCard: flashcards.firstOrNull,
       remainingCount: flashcards.length,
       isFlipped: false,
@@ -28,8 +23,8 @@ class StudyFlashcardController extends _$StudyFlashcardController {
   }
 }
 
-class StudyFlashcardState {
-  StudyFlashcardState({
+class FlashcardStudyState {
+  FlashcardStudyState({
     required this.currentCard,
     required this.remainingCount,
     required this.isFlipped,
@@ -39,18 +34,18 @@ class StudyFlashcardState {
   final int remainingCount;
   final bool isFlipped;
 
-  factory StudyFlashcardState.initial() => StudyFlashcardState(
+  factory FlashcardStudyState.initial() => FlashcardStudyState(
         currentCard: null,
         remainingCount: 0,
         isFlipped: false,
       );
 
-  StudyFlashcardState copyWith({
+  FlashcardStudyState copyWith({
     Flashcard? currentCard,
     int? remainingCount,
     bool? isFlipped,
   }) {
-    return StudyFlashcardState(
+    return FlashcardStudyState(
       currentCard: currentCard ?? this.currentCard,
       remainingCount: remainingCount ?? this.remainingCount,
       isFlipped: isFlipped ?? this.isFlipped,
