@@ -1,4 +1,3 @@
-import 'package:flashcard_pet/src/features/flashcards/application/study_flashcard_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
@@ -27,7 +26,7 @@ class DeckEditorController extends _$DeckEditorController {
       await ref.read(decksRepositoryProvider).setDeck(deck);
       await ref.read(flashcardsRepositoryProvider).setFlashcards(cardsToUpdate);
       await ref
-          .read(studyFlashcardServiceProvider)
+          .read(flashcardsRepositoryProvider)
           .deleteFlashcardsById(deletedCardsIds);
       state = const AsyncData(null);
     } catch (e, st) {
@@ -40,7 +39,7 @@ class DeckEditorController extends _$DeckEditorController {
 
     try {
       await ref
-          .read(studyFlashcardServiceProvider)
+          .read(flashcardsRepositoryProvider)
           .deleteFlashcardsByDeckId(deckId);
 
       await ref.read(decksRepositoryProvider).deleteDeckById(deckId);

@@ -1,3 +1,4 @@
+import 'package:flashcard_pet/src/common_widgets/alert_dialogs.dart';
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/common_widgets/empty_placeholder_widget.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/quill_content_display.dart';
@@ -75,9 +76,8 @@ class StudyFlashcardScreenContents extends ConsumerWidget {
                     ),
                     if (isFlipped)
                       ElevatedButton(
-                        onPressed: () => ref
-                            .read(studyFlashcardControllerProvider.notifier)
-                            .loadNextCard(),
+                        onPressed: () =>
+                            showNotImplementedAlertDialog(context: context),
                         child: const Text("Next"),
                       ),
                   ],

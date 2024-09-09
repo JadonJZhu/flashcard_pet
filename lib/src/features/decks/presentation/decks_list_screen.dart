@@ -42,14 +42,6 @@ class DeckListScreenContents extends ConsumerWidget {
               final deck = decksList[index];
               return DeckTile(
                 deck: deck,
-                onPressed: () async {
-                  final success = await ref
-                      .read(decksListScreenControllerProvider.notifier)
-                      .loadQueueWithDeckId(deck.id);
-                  if (success && context.mounted) {
-                    context.goNamed(AppRoute.study.name);
-                  }
-                },
               );
             });
       },

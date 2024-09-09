@@ -1,4 +1,4 @@
-import 'package:flashcard_pet/src/features/flashcards/application/study_flashcard_service.dart';
+import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,20 +13,13 @@ class StudyFlashcardController extends _$StudyFlashcardController {
   }
 
   Future<StudyFlashcardState> _loadStudyInfo() async {
-    final flashcards = await ref.watch(flashcardsToStudyStreamProvider.future);
+    final flashcards = await ref.watch(dueFlashcardsStreamProvider.future);
 
     return StudyFlashcardState(
       currentCard: flashcards.firstOrNull,
       remainingCount: flashcards.length,
       isFlipped: false,
     );
-  }
-
-  Future<void> loadNextCard() async {
-    state = const AsyncLoading();
-
-    final studyFlashcardService = ref.read(studyFlashcardServiceProvider);
-    await studyFlashcardService.moveToNextCard();
   }
 
   void flipCard() {

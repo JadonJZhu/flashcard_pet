@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
@@ -23,3 +20,5 @@ class Flashcard {
   final DateTime nextDueDate;
 
 }
+
+

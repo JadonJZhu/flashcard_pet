@@ -11,10 +11,12 @@ abstract class FlashcardsRepository {
   Stream<Flashcard?> watchFlashcardById(FlashcardID flashcardId);
   Future<Flashcard?> fetchFlashcardById(FlashcardID flashcardId);
   Future<List<Flashcard>> fetchFlashcardsByDeck(DeckID deckId);
+  Stream<List<Flashcard>> watchDueFlashcards();
 
   Future<void> setFlashcard(Flashcard card);
   Future<void> setFlashcards(List<Flashcard> cards);
   Future<void> deleteFlashcardsById(List<FlashcardID> ids);
+  Future<void> deleteFlashcardsByDeckId(DeckID id);
 }
 
 @Riverpod(keepAlive: true)
@@ -48,4 +50,10 @@ Future<List<Flashcard>> flashcardsByDeckFuture(
     FlashcardsByDeckFutureRef ref, DeckID deckId) {
   final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
   return flashcardsRepository.fetchFlashcardsByDeck(deckId);
+}
+
+@riverpod
+Stream<List<Flashcard>> dueFlashcardsStream(DueFlashcardsStreamRef ref) {
+  final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
+  return flashcardsRepository.watchDueFlashcards();
 }

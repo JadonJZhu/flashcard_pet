@@ -455,5 +455,23 @@ class _FlashcardsByDeckFutureProviderElement
   @override
   String get deckId => (origin as FlashcardsByDeckFutureProvider).deckId;
 }
+
+String _$dueFlashcardsStreamHash() =>
+    r'1b3f76fe9af768dd8858bbf4c45ee4f03086d553';
+
+/// See also [dueFlashcardsStream].
+@ProviderFor(dueFlashcardsStream)
+final dueFlashcardsStreamProvider =
+    AutoDisposeStreamProvider<List<Flashcard>>.internal(
+  dueFlashcardsStream,
+  name: r'dueFlashcardsStreamProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$dueFlashcardsStreamHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DueFlashcardsStreamRef = AutoDisposeStreamProviderRef<List<Flashcard>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

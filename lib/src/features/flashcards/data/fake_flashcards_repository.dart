@@ -41,6 +41,13 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
   }
 
   @override
+  Stream<List<Flashcard>> watchDueFlashcards() {
+    return _flashcards.stream.map((flashcardsMap) => flashcardsMap.values
+        .where((flashcard) => flashcard.nextDueDate.isBefore(DateTime.now()))
+        .toList());
+  }
+
+  @override
   Future<void> setFlashcard(Flashcard card) async {
     await fakeAsyncMutationCallback(
       inMemoryStore: _flashcards,
@@ -72,5 +79,14 @@ class FakeFlashcardsRepository implements FlashcardsRepository {
         }
       },
     );
+  }
+
+  @override
+  Future<void> deleteFlashcardsByDeckId(DeckID id) async {
+    await fakeAsyncMutationCallback(
+        inMemoryStore: _flashcards,
+        callback: (flashcards) {
+          flashcards.removeWhere((_, flashcard) => flashcard.deckId == id);
+        });
   }
 }

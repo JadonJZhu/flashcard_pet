@@ -7,7 +7,7 @@ part of 'deck_editor_controller.dart';
 // **************************************************************************
 
 String _$deckEditorControllerHash() =>
-    r'0d89c1ab7c5c73a56dc1ab8f6b1ae5535238ed78';
+    r'fd80b4e74e8b9649b343b37f78520749997db112';
 
 /// See also [DeckEditorController].
 @ProviderFor(DeckEditorController)
