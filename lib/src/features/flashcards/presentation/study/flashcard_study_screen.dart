@@ -1,4 +1,3 @@
-import 'package:flashcard_pet/src/common_widgets/alert_dialogs.dart';
 import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/common_widgets/empty_placeholder_widget.dart';
 import 'package:flashcard_pet/src/features/flashcards/presentation/study/quill_content_display.dart';
@@ -6,6 +5,12 @@ import 'package:flashcard_pet/src/features/flashcards/presentation/study/flashca
 import 'package:flashcard_pet/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+enum AnswerChoice {
+  easy,
+  difficult,
+  forgot;
+}
 
 class FlashcardStudyScreen extends StatelessWidget {
   const FlashcardStudyScreen({super.key});
@@ -68,18 +73,21 @@ class FlashcardStudyScreenContents extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Cards left: ${studyState.remainingCount}"),
-                    ElevatedButton(
-                      onPressed: () => ref
-                          .read(flashcardStudyControllerProvider.notifier)
-                          .flipCard(),
-                      child: Text(isFlipped ? 'Flip' : 'Flip'),
-                    ),
-                    if (isFlipped)
+                    if (!isFlipped)
                       ElevatedButton(
-                        onPressed: () =>
-                            showNotImplementedAlertDialog(context: context),
-                        child: const Text("Next"),
+                        onPressed: () => ref
+                            .read(flashcardStudyControllerProvider.notifier)
+                            .flipCard(),
+                        child: Text(isFlipped ? 'Flip' : 'Flip'),
                       ),
+                    if (isFlipped)
+                      for (final choice in AnswerChoice.values)
+                        ElevatedButton(
+                          onPressed: () => ref
+                              .read(flashcardStudyControllerProvider.notifier)
+                              .answer(flashcard, choice),
+                          child: Text(choice.name),
+                        ),
                   ],
                 ),
               ),
