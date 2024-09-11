@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
-import 'package:flashcard_pet/src/features/flashcards/presentation/study/flashcard_study_screen.dart';
+import 'package:flashcard_pet/src/features/flashcards/presentation/study/flashcard_study_contents.dart';
 
 extension MutableFlashcard on Flashcard {
+  // This algorithm follows the Super Memo 2 Spaced Repetition algorithm found online, adapted to fit 3 answer choices instead of 5. 
   Flashcard setNextReview(AnswerChoice answerChoice) {
     int quality;
     int newInterval;

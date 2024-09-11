@@ -1,14 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 typedef DeckID = String;
 
 class Deck {
   const Deck({
     required this.id,
     required this.title,
+    this.examDate,
   });
 
   final DeckID id;
   final String title;
+  final DateTime? examDate;
 
   Deck copyWith({
     DeckID? id,
