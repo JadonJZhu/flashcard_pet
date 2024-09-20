@@ -2,13 +2,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
-import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
+import 'package:flashcard_pet/src/features/study/data/flashcards_repository.dart';
+import 'package:flashcard_pet/src/features/study/domain/flashcard.dart';
 
-part 'deck_editor_controller.g.dart';
+part 'deck_edit_controller.g.dart';
 
 @riverpod
-class DeckEditorController extends _$DeckEditorController {
+class DeckEditController extends _$DeckEditController {
   @override
   FutureOr<void> build() async {
     // no-op

@@ -1,9 +1,10 @@
 import 'package:flashcard_pet/src/common_widgets/alert_dialogs.dart';
 import 'package:flashcard_pet/src/common_widgets/primary_button.dart';
 import 'package:flashcard_pet/src/features/decks/data/fake_decks_repository.dart';
+import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_controller.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/flashcard_state.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
-import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
+import 'package:flashcard_pet/src/features/study/data/flashcards_repository.dart';
+import 'package:flashcard_pet/src/features/study/domain/flashcard.dart';
 import 'package:flashcard_pet/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +15,6 @@ import 'package:flashcard_pet/src/common_widgets/async_value_widget.dart';
 import 'package:flashcard_pet/src/constants/app_sizes.dart';
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
 import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_edit_input_fields.dart';
-import 'package:flashcard_pet/src/features/decks/presentation/deck_edit/deck_editor_controller.dart';
 
 class DeckEditScreen extends StatelessWidget {
   final DeckID? deckId;
@@ -174,7 +174,7 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
       );
     }).toList();
 
-    await ref.read(deckEditorControllerProvider.notifier).saveDeck(
+    await ref.read(deckEditControllerProvider.notifier).saveDeck(
         deck: deck,
         cardsToUpdate: flashcards,
         deletedCardsIds: deletedCardsIds);
@@ -182,7 +182,7 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(deckEditorControllerProvider);
+    final state = ref.watch(deckEditControllerProvider);
 
     return AsyncValueWidget(
       value: state,
@@ -257,7 +257,7 @@ class _DeckEditFormState extends ConsumerState<DeckEditForm> {
                       defaultActionText: "Yes");
                   if (confirmed == true) {
                     await ref
-                        .read(deckEditorControllerProvider.notifier)
+                        .read(deckEditControllerProvider.notifier)
                         .deleteDeck(widget.deck!.id);
                     widget.exitScreen?.call();
                   }

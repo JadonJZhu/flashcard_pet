@@ -200,5 +200,133 @@ class _DeckByIdFutureProviderElement
   @override
   String get deckId => (origin as DeckByIdFutureProvider).deckId;
 }
+
+String _$deckByIdStreamHash() => r'343fb7aff84ad4691194578abd5f85d92fa8bf7e';
+
+/// See also [deckByIdStream].
+@ProviderFor(deckByIdStream)
+const deckByIdStreamProvider = DeckByIdStreamFamily();
+
+/// See also [deckByIdStream].
+class DeckByIdStreamFamily extends Family<AsyncValue<Deck?>> {
+  /// See also [deckByIdStream].
+  const DeckByIdStreamFamily();
+
+  /// See also [deckByIdStream].
+  DeckByIdStreamProvider call(
+    String deckId,
+  ) {
+    return DeckByIdStreamProvider(
+      deckId,
+    );
+  }
+
+  @override
+  DeckByIdStreamProvider getProviderOverride(
+    covariant DeckByIdStreamProvider provider,
+  ) {
+    return call(
+      provider.deckId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'deckByIdStreamProvider';
+}
+
+/// See also [deckByIdStream].
+class DeckByIdStreamProvider extends AutoDisposeStreamProvider<Deck?> {
+  /// See also [deckByIdStream].
+  DeckByIdStreamProvider(
+    String deckId,
+  ) : this._internal(
+          (ref) => deckByIdStream(
+            ref as DeckByIdStreamRef,
+            deckId,
+          ),
+          from: deckByIdStreamProvider,
+          name: r'deckByIdStreamProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$deckByIdStreamHash,
+          dependencies: DeckByIdStreamFamily._dependencies,
+          allTransitiveDependencies:
+              DeckByIdStreamFamily._allTransitiveDependencies,
+          deckId: deckId,
+        );
+
+  DeckByIdStreamProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.deckId,
+  }) : super.internal();
+
+  final String deckId;
+
+  @override
+  Override overrideWith(
+    Stream<Deck?> Function(DeckByIdStreamRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DeckByIdStreamProvider._internal(
+        (ref) => create(ref as DeckByIdStreamRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        deckId: deckId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<Deck?> createElement() {
+    return _DeckByIdStreamProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DeckByIdStreamProvider && other.deckId == deckId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, deckId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin DeckByIdStreamRef on AutoDisposeStreamProviderRef<Deck?> {
+  /// The parameter `deckId` of this provider.
+  String get deckId;
+}
+
+class _DeckByIdStreamProviderElement
+    extends AutoDisposeStreamProviderElement<Deck?> with DeckByIdStreamRef {
+  _DeckByIdStreamProviderElement(super.provider);
+
+  @override
+  String get deckId => (origin as DeckByIdStreamProvider).deckId;
+}
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

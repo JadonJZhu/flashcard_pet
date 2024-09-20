@@ -456,6 +456,138 @@ class _FlashcardsByDeckFutureProviderElement
   String get deckId => (origin as FlashcardsByDeckFutureProvider).deckId;
 }
 
+String _$flashcardsByDateStreamHash() =>
+    r'316ba5fb3eb6c7fbd6285671e302cf2aff49ece0';
+
+/// See also [flashcardsByDateStream].
+@ProviderFor(flashcardsByDateStream)
+const flashcardsByDateStreamProvider = FlashcardsByDateStreamFamily();
+
+/// See also [flashcardsByDateStream].
+class FlashcardsByDateStreamFamily extends Family<AsyncValue<List<Flashcard>>> {
+  /// See also [flashcardsByDateStream].
+  const FlashcardsByDateStreamFamily();
+
+  /// See also [flashcardsByDateStream].
+  FlashcardsByDateStreamProvider call(
+    DateTime dueDate,
+  ) {
+    return FlashcardsByDateStreamProvider(
+      dueDate,
+    );
+  }
+
+  @override
+  FlashcardsByDateStreamProvider getProviderOverride(
+    covariant FlashcardsByDateStreamProvider provider,
+  ) {
+    return call(
+      provider.dueDate,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'flashcardsByDateStreamProvider';
+}
+
+/// See also [flashcardsByDateStream].
+class FlashcardsByDateStreamProvider
+    extends AutoDisposeStreamProvider<List<Flashcard>> {
+  /// See also [flashcardsByDateStream].
+  FlashcardsByDateStreamProvider(
+    DateTime dueDate,
+  ) : this._internal(
+          (ref) => flashcardsByDateStream(
+            ref as FlashcardsByDateStreamRef,
+            dueDate,
+          ),
+          from: flashcardsByDateStreamProvider,
+          name: r'flashcardsByDateStreamProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$flashcardsByDateStreamHash,
+          dependencies: FlashcardsByDateStreamFamily._dependencies,
+          allTransitiveDependencies:
+              FlashcardsByDateStreamFamily._allTransitiveDependencies,
+          dueDate: dueDate,
+        );
+
+  FlashcardsByDateStreamProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.dueDate,
+  }) : super.internal();
+
+  final DateTime dueDate;
+
+  @override
+  Override overrideWith(
+    Stream<List<Flashcard>> Function(FlashcardsByDateStreamRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: FlashcardsByDateStreamProvider._internal(
+        (ref) => create(ref as FlashcardsByDateStreamRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        dueDate: dueDate,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<List<Flashcard>> createElement() {
+    return _FlashcardsByDateStreamProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FlashcardsByDateStreamProvider && other.dueDate == dueDate;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, dueDate.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin FlashcardsByDateStreamRef
+    on AutoDisposeStreamProviderRef<List<Flashcard>> {
+  /// The parameter `dueDate` of this provider.
+  DateTime get dueDate;
+}
+
+class _FlashcardsByDateStreamProviderElement
+    extends AutoDisposeStreamProviderElement<List<Flashcard>>
+    with FlashcardsByDateStreamRef {
+  _FlashcardsByDateStreamProviderElement(super.provider);
+
+  @override
+  DateTime get dueDate => (origin as FlashcardsByDateStreamProvider).dueDate;
+}
+
 String _$dueFlashcardsStreamHash() =>
     r'1b3f76fe9af768dd8858bbf4c45ee4f03086d553';
 

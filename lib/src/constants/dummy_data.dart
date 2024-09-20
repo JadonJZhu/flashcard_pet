@@ -2,7 +2,7 @@
 library;
 
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
+import 'package:flashcard_pet/src/features/study/domain/flashcard.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_quill/quill_delta.dart' as quill_delta;
 
@@ -31,7 +31,7 @@ final Map<FlashcardID, Flashcard> kDummyFlashcardsMap = {
         {'bold': true},
       )
       ..insert('!\n')),
-      nextDueDate: DateTime.now(),
+      nextDueDate: DateTime(2024, 9, 11),
   ),
   '2': Flashcard(
     id: '2',
@@ -41,3 +41,7 @@ final Map<FlashcardID, Flashcard> kDummyFlashcardsMap = {
     nextDueDate: DateTime.now(),
   ),
 };
+
+// - refactor flashcard study to get rid of complex controller
+// - use stateful widgets when controllers get too complex
+// - use controllers for asynchronous callbacks 

@@ -16,7 +16,7 @@ class DeckListScreen extends StatelessWidget {
         title: const Text("Deck List Screen"),
         actions: [
           IconButton(
-            onPressed: () => context.goNamed(AppRoute.edit.name),
+            onPressed: () => context.goNamed(AppRoute.deckEdit.name),
             icon: const Icon(Icons.add),
           ),
         ],

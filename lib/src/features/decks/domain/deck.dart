@@ -14,8 +14,8 @@ class Deck {
   Deck copyWith({
     DeckID? id,
     String? title,
-  }) {
-    return Deck(
+}) {
+  return Deck(
       id: id ?? this.id,
       title: title ?? this.title,
     );

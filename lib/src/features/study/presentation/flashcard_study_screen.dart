@@ -1,5 +1,6 @@
-import 'package:flashcard_pet/src/features/flashcards/presentation/study/flashcard_study_controller.dart';
-import 'package:flashcard_pet/src/features/flashcards/presentation/study/quill_content_display.dart';
+import 'package:flashcard_pet/src/features/flashcards/presentation/flashcard_study_controller.dart';
+import 'package:flashcard_pet/src/common_widgets/quill_content_display.dart';
+import 'package:flashcard_pet/src/features/study/domain/flashcard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,18 +10,25 @@ enum AnswerChoice {
   forgot;
 }
 
-class FlashcardStudyContents extends ConsumerWidget {
-  const FlashcardStudyContents({super.key, required this.studyState});
+class FlashcardStudyScreen extends ConsumerWidget {
+  const FlashcardStudyScreen({super.key, required this.flashcardIdsToStudy});
 
-  final FlashcardStudyState studyState;
+  final List<FlashcardID> flashcardIdsToStudy;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final flashcard = studyState.currentCard!;
-    final isFlipped = studyState.isFlipped;
-    final cardContent =
-        isFlipped ? flashcard.backContent : flashcard.frontContent;
 
+    return FlashcardStudyContents();
+  }
+}
+
+class FlashcardStudyContents extends StatelessWidget {
+  const FlashcardStudyContents({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(

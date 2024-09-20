@@ -22,6 +22,12 @@ class FakeDecksRepository {
     });
   }
 
+  Stream<Deck?> watchDeckById(DeckID deckId) {
+    return _decksStore.stream.map((deckMap) {
+      return deckMap[deckId];
+    });
+  }
+
   Future<List<Deck>> fetchDecksList() async {
     await delay(addDelay);
     return _decksStore.value.values.toList();
@@ -69,4 +75,10 @@ Future<List<Deck>> decksListFuture(DecksListFutureRef ref) {
 Future<Deck?> deckByIdFuture(DeckByIdFutureRef ref, DeckID deckId) {
   final decksRepository = ref.watch(decksRepositoryProvider);
   return decksRepository.fetchDeckById(deckId);
+}
+
+@riverpod
+Stream<Deck?> deckByIdStream(DeckByIdStreamRef ref, DeckID deckId) {
+  final decksRepository = ref.watch(decksRepositoryProvider);
+  return decksRepository.watchDeckById(deckId);
 }

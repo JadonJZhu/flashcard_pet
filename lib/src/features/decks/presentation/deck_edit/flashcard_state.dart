@@ -1,7 +1,7 @@
 /// State class to encapsulate state data for the deck edit screen.
 library;
 
-import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
+import 'package:flashcard_pet/src/features/study/domain/flashcard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 

@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
-import 'package:flashcard_pet/src/features/flashcards/presentation/study/flashcard_study_contents.dart';
+import 'package:flashcard_pet/src/features/study/domain/flashcard.dart';
+import 'package:flashcard_pet/src/features/study/presentation/flashcard_study_screen.dart';
 
 extension MutableFlashcard on Flashcard {
-  // This algorithm follows the Super Memo 2 Spaced Repetition algorithm found online, adapted to fit 3 answer choices instead of 5. 
-  Flashcard setNextReview(AnswerChoice answerChoice) {
+  // This algorithm follows the Super Memo 2 Spaced Repetition algorithm found online, adapted to fit 3 answer choices instead of 5.
+  Flashcard setNextReview(AnswerChoice answerChoice, DateTime? examDate) {
     int quality;
     int newInterval;
 
@@ -43,8 +43,13 @@ extension MutableFlashcard on Flashcard {
           : max(newInterval, previousInterval! + 1);
     }
 
+    DateTime? nextDueDate = DateTime.now().add(Duration(days: newInterval));
+    if (examDate != null && nextDueDate.isAfter(examDate)) {
+      nextDueDate = null;
+    }
+
     return copyWith(
-      nextDueDate: DateTime.now().add(Duration(days: newInterval)),
+      nextDueDate: nextDueDate,
       reviewCount: reviewCount + 1,
       easeFactor: newEaseFactor,
       previousInterval: newInterval,

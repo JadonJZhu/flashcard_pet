@@ -1,7 +1,7 @@
 import 'package:flashcard_pet/src/exceptions/async_error_logger.dart';
 import 'package:flashcard_pet/src/features/authentication/data/fake_auth_repository.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/fake_flashcards_repository.dart';
-import 'package:flashcard_pet/src/features/flashcards/data/flashcards_repository.dart';
+import 'package:flashcard_pet/src/features/study/data/fake_flashcards_repository.dart';
+import 'package:flashcard_pet/src/features/study/data/flashcards_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<ProviderContainer> createFakesProviderContainer(

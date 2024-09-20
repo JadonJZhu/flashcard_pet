@@ -1,5 +1,5 @@
 import 'package:flashcard_pet/src/features/decks/domain/deck.dart';
-import 'package:flashcard_pet/src/features/flashcards/domain/flashcard.dart';
+import 'package:flashcard_pet/src/features/study/domain/flashcard.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'flashcards_repository.g.dart';
@@ -11,6 +11,7 @@ abstract class FlashcardsRepository {
   Stream<Flashcard?> watchFlashcardById(FlashcardID flashcardId);
   Future<Flashcard?> fetchFlashcardById(FlashcardID flashcardId);
   Future<List<Flashcard>> fetchFlashcardsByDeck(DeckID deckId);
+  Stream<List<Flashcard>> watchFlashcardsByDueDate(DateTime dueDate);
   Stream<List<Flashcard>> watchDueFlashcards();
 
   Future<void> setFlashcard(Flashcard card);
@@ -50,6 +51,13 @@ Future<List<Flashcard>> flashcardsByDeckFuture(
     FlashcardsByDeckFutureRef ref, DeckID deckId) {
   final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
   return flashcardsRepository.fetchFlashcardsByDeck(deckId);
+}
+
+@riverpod
+Stream<List<Flashcard>> flashcardsByDateStream(
+    DueFlashcardsStreamRef ref, DateTime dueDate) {
+  final flashcardsRepository = ref.watch(flashcardsRepositoryProvider);
+  return flashcardsRepository.watchFlashcardsByDueDate(dueDate);
 }
 
 @riverpod
